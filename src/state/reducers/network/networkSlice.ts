@@ -1,14 +1,29 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 
-export type Networks = object[];
+type TransactionState = "idle" | "pending" | "complete";
+
+interface Networks {
+  [name: string]: {
+    chainId: string;
+    accounts: Account[];
+  };
+}
+
+interface Account {
+  address: string;
+  ethBalance: string;
+  usdcBalance: string;
+  umaBalance: string;
+  txState: TransactionState;
+}
 
 export interface NetworkState {
   value: Networks;
 }
 
 const initialState: NetworkState = {
-  value: [],
+  value: {},
 };
 
 export const networkSlice = createSlice({
@@ -22,6 +37,16 @@ export const networkSlice = createSlice({
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
       state.value = action.payload;
+    },
+    addAccountToNetwork: (
+      state,
+      action: PayloadAction<{ account: Account; network: string }>
+    ) => {
+      const n = action.payload.network;
+      const network = state.value[n];
+      const newAccounts = [...network.accounts, action.payload.account];
+
+      state.value[n].accounts = newAccounts;
     },
   },
 });
