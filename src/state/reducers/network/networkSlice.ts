@@ -4,13 +4,16 @@ import { RootState } from "../../store";
 type TransactionState = "idle" | "pending" | "complete";
 
 interface Networks {
-  [name: string]: {
-    chainId: string;
-    accounts: Account[];
-  };
+  [name: string]: Network;
 }
 
-interface Account {
+export interface Network {
+  name: string;
+  chainId: string;
+  accounts: Account[];
+}
+
+export interface Account {
   address: string;
   ethBalance: string;
   usdcBalance: string;
@@ -31,12 +34,8 @@ export const networkSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    update: (state, action: PayloadAction<Networks>) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
-      state.value = action.payload;
+    addNetwork: (state, action: PayloadAction<Network>) => {
+      state.value[action.payload.name] = action.payload;
     },
     addAccountToNetwork: (
       state,
@@ -44,14 +43,16 @@ export const networkSlice = createSlice({
     ) => {
       const n = action.payload.network;
       const network = state.value[n];
-      const newAccounts = [...network.accounts, action.payload.account];
+      if (network) {
+        const newAccounts = [...network.accounts, action.payload.account];
 
-      state.value[n].accounts = newAccounts;
+        state.value[n].accounts = newAccounts;
+      }
     },
   },
 });
 
-export const { update } = networkSlice.actions;
+export const { addAccountToNetwork, addNetwork } = networkSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
