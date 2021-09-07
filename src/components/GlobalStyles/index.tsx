@@ -1,3 +1,4 @@
+import React from "react";
 import { Global, css } from "@emotion/react";
 import { COLORS } from "../../utils";
 
@@ -154,9 +155,11 @@ const variables = css`
   :root {
     /* COLORS */
     --gray: hsl(${COLORS.gray});
+    --gray-light: hsla(${COLORS.grayLight});
     --white: hsl(${COLORS.white});
     --black: hsl(${COLORS.black});
     --primary: hsl(${COLORS.primary});
+    --primary-dark: hsl(${COLORS.primaryDark});
     --secondary: hsl(${COLORS.secondary});
 
     --primary-transparent: hsla(${COLORS.primary} / 0.4);

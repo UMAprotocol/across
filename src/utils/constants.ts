@@ -15,7 +15,9 @@ export const QUERIES = {
 
 export const COLORS = {
   gray: "230deg 6% 19%",
+  grayLight: "240deg 2% 39%",
   primary: "166deg 92% 70%",
+  primaryDark: "180deg 15% 25%",
   secondary: "266deg 77% 62%",
   white: "0deg 100% 100%",
   black: "0deg 0% 0%",
