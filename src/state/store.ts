@@ -1,11 +1,13 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import counterReducer from "../features/counter/counterSlice";
-import networkReducer from "./reducers/network/networkSlice";
+import networkReducer from "./reducers/network";
+import contractReducer from "./reducers/contract";
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     networks: networkReducer,
+    contracts: contractReducer,
   },
   devTools: true,
 });

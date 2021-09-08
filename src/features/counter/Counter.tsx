@@ -22,12 +22,11 @@ import styles from "./Counter.module.css";
 export function Counter() {
   const count = useAppSelector(selectCount);
   const networks = useAppSelector(selectNetworks);
+
   const dispatch = useAppDispatch();
   const [incrementAmount, setIncrementAmount] = useState("2");
 
   const incrementValue = Number(incrementAmount) || 0;
-
-  console.log("dispatch", dispatch);
 
   return (
     <div>
