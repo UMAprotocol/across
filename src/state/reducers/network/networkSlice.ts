@@ -21,10 +21,12 @@ export interface Account {
 
 export interface NetworkState {
   value: Networks;
+  error: Error | undefined;
 }
 
 const initialState: NetworkState = {
   value: {},
+  error: undefined,
 };
 
 export const networkSlice = createSlice({
@@ -47,10 +49,14 @@ export const networkSlice = createSlice({
         state.value[n].accounts = newAccounts;
       }
     },
+    setNetworkError: (state, action: PayloadAction<Error>) => {
+      state.error = action.payload;
+    },
   },
 });
 
-export const { addAccountToNetwork, addNetwork } = networkSlice.actions;
+export const { addAccountToNetwork, addNetwork, setNetworkError } =
+  networkSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

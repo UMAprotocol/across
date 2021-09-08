@@ -11,10 +11,12 @@ interface Contract {
 
 interface IContractState {
   value: Contract[];
+  error: Error | undefined;
 }
 
 const initialState: IContractState = {
   value: [] as Contract[],
+  error: undefined,
 };
 
 export const contractSlice = createSlice({
@@ -27,10 +29,13 @@ export const contractSlice = createSlice({
 
       state.value = nextState;
     },
+    setContractError: (state, action: PayloadAction<Error>) => {
+      state.error = action.payload;
+    },
   },
 });
 
-export const { addContract } = contractSlice.actions;
+export const { addContract, setContractError } = contractSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
