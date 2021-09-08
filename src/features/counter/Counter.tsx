@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import {
@@ -59,7 +59,7 @@ export function Counter() {
                   ethBalance: "1.0",
                   usdcBalance: "0",
                   umaBalance: "0",
-                  txState: "idle",
+                  txHashes: [],
                 },
               })
             )

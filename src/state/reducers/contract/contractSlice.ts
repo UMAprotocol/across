@@ -2,10 +2,6 @@ import { createSlice, PayloadAction, Draft } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 import { ethers } from "ethers";
 
-interface ContractState {
-  value: Contract[];
-}
-
 interface Contract {
   address: string;
   type: string;
@@ -13,7 +9,11 @@ interface Contract {
   instance: ethers.Contract;
 }
 
-const initialState: ContractState = {
+interface IContractState {
+  value: Contract[];
+}
+
+const initialState: IContractState = {
   value: [] as Contract[],
 };
 

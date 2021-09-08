@@ -1,8 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 
-type TransactionState = "idle" | "pending" | "complete";
-
 interface Networks {
   [name: string]: Network;
 }
@@ -18,7 +16,7 @@ export interface Account {
   ethBalance: string;
   usdcBalance: string;
   umaBalance: string;
-  txState: TransactionState;
+  txHashes: string[];
 }
 
 export interface NetworkState {
