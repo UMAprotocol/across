@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import {
@@ -16,7 +16,10 @@ import {
   Network,
   Account,
 } from "state/reducers/network/networkSlice";
-
+import {
+  initializeOnboard,
+  selectOnboard,
+} from "state/reducers/onboard/onboardSlice";
 import styles from "./Counter.module.css";
 
 export function Counter() {
@@ -27,7 +30,12 @@ export function Counter() {
   const [incrementAmount, setIncrementAmount] = useState("2");
 
   const incrementValue = Number(incrementAmount) || 0;
+  const onboard = useAppSelector(selectOnboard);
+  console.log("onboard", onboard);
 
+  useEffect(() => {
+    dispatch(initializeOnboard());
+  }, [dispatch]);
   return (
     <div>
       <div className={styles.row}>
