@@ -52,11 +52,18 @@ export const networkSlice = createSlice({
     setNetworkError: (state, action: PayloadAction<Error>) => {
       state.error = action.payload;
     },
+    resetNetworkState: (state) => {
+      state = initialState;
+    },
   },
 });
 
-export const { addAccountToNetwork, addNetwork, setNetworkError } =
-  networkSlice.actions;
+export const {
+  addAccountToNetwork,
+  addNetwork,
+  setNetworkError,
+  resetNetworkState,
+} = networkSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

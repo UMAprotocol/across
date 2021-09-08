@@ -32,10 +32,19 @@ export const contractSlice = createSlice({
     setContractError: (state, action: PayloadAction<Error>) => {
       state.error = action.payload;
     },
+    resetContractState: (state) => {
+      const is = {
+        value: [] as Draft<Contract>[],
+        error: undefined,
+      };
+
+      state = is;
+    },
   },
 });
 
-export const { addContract, setContractError } = contractSlice.actions;
+export const { addContract, setContractError, resetContractState } =
+  contractSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

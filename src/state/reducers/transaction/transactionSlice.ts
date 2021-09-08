@@ -61,6 +61,9 @@ export const transactionSlice = createSlice({
         state.value = nextState;
       }
     },
+    resetTransactionState: (state) => {
+      state = initialState;
+    },
   },
 });
 
