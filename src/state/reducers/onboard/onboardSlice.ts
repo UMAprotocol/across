@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, Draft } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 import { API as OnboardApi, Wallet } from "bnc-onboard/dist/src/interfaces";
-import { connectOnboard, createOnboardInstance, addressThunk } from "./helpers";
+import { connectOnboard, addressThunk } from "./helpers";
 
 export interface IOnboardState {
   instance: Draft<OnboardApi> | null;
@@ -56,7 +56,6 @@ export const {
   updateNetwork,
   updateWallet,
   setError,
-  checkWallet,
 } = onboardSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
