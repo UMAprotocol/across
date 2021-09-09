@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, Draft } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 import { API as OnboardApi, Wallet } from "bnc-onboard/dist/src/interfaces";
-import { connectOnboard, createOnboardInstance } from "./helpers";
+import { connectOnboard, createOnboardInstance, addressThunk } from "./helpers";
 
 export interface IOnboardState {
   instance: Draft<OnboardApi> | null;
@@ -31,10 +31,16 @@ export const onboardSlice = createSlice({
         state.instance = instance;
       }
     },
-    connect: (state) => {
-      connectOnboard(state);
+    // connect: (state) => {
+    //   connectOnboard(state);
+    // },
+    checkWallet: (state) => {
+      if (state.instance) {
+        state.instance.walletCheck();
+      }
     },
     updateAddress: (state, action: PayloadAction<string>) => {
+      console.log("in here?", action.payload);
       state.address = action.payload;
     },
     updateNetwork: (state, action: PayloadAction<number>) => {
@@ -47,15 +53,20 @@ export const onboardSlice = createSlice({
       state.error = action.payload;
     },
   },
+  extraReducers: (builder) => {
+    // Add reducers for additional action types here, and handle loading state as needed
+    builder.addCase(connectOnboard.fulfilled, (state, action) => {});
+    builder.addCase(addressThunk.fulfilled, (state, action) => {});
+  },
 });
 
 export const {
   initializeOnboard,
-  connect,
   updateAddress,
   updateNetwork,
   updateWallet,
   setError,
+  checkWallet,
 } = onboardSlice.actions;
 
 // The function below is called a selector and allows us to select a value from

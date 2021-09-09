@@ -1,3 +1,4 @@
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import { Initialization } from "bnc-onboard/dist/src/interfaces";
 import {
   IOnboardState,
@@ -85,24 +86,28 @@ export function onboardBaseConfig(_chainId?: number): Initialization {
   };
 }
 
-export async function connectOnboard(state: IOnboardState) {
-  if (state.instance) {
-    try {
-      await state.instance.walletSelect();
-      await state.instance.walletCheck();
-    } catch (err) {
-      console.log("err", err);
-      setError(new Error("Error in Onboard call"));
+export const connectOnboard = createAsyncThunk(
+  "onboard/connectOnboard",
+  async (state: IOnboardState) => {
+    if (state.instance) {
+      try {
+        await state.instance.walletSelect();
+        await state.instance.walletCheck();
+        return true;
+      } catch (err) {
+        console.log("err", err);
+        setError(new Error("Error in Onboard call"));
+      }
     }
   }
-}
+);
 
 export function createOnboardInstance() {
   const instance = Onboard({
     ...onboardBaseConfig(),
     subscriptions: {
       address: (address: string) => {
-        updateAddress(address);
+        addressThunk(address);
       },
       network: (networkId: number) => {
         updateNetwork(networkId);
@@ -127,3 +132,11 @@ export function createOnboardInstance() {
 
   return instance;
 }
+
+export const addressThunk = createAsyncThunk(
+  "onboard/updateAddy",
+  async (address: string, { dispatch }) => {
+    console.log("dispatch address", dispatch);
+    dispatch(updateAddress(address));
+  }
+);

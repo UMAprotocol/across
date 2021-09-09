@@ -19,8 +19,9 @@ import {
 import {
   initializeOnboard,
   selectOnboard,
-  connect,
 } from "state/reducers/onboard/onboardSlice";
+import { connectOnboard } from "state/reducers/onboard/helpers";
+
 import styles from "./Counter.module.css";
 
 export function Counter() {
@@ -44,7 +45,7 @@ export function Counter() {
         <button
           className={styles.button}
           aria-label="Connect"
-          onClick={() => dispatch(connect())}
+          onClick={() => dispatch(connectOnboard(onboard))}
         >
           Connect
         </button>
