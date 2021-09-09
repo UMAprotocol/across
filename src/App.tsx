@@ -1,8 +1,15 @@
 import logo from "./logo.svg";
 import { Counter } from "./features/counter/Counter";
 import "./App.css";
+import { createOnboardInstance } from "./state/reducers/onboard/helpers";
+import { useAppDispatch } from "./state/hooks";
+import { setOnboard } from "./state/reducers/onboard/onboardSlice";
 
 function App() {
+  const dispatch = useAppDispatch();
+  const onboardInstance = createOnboardInstance(dispatch);
+  dispatch(setOnboard(onboardInstance));
+
   return (
     <div className="App">
       <header className="App-header">

@@ -24,23 +24,13 @@ export const onboardSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    initializeOnboard: (state) => {
+    setOnboard: (state, action: PayloadAction<OnboardApi>) => {
       // Only instantiate this once.
       if (!state.instance) {
-        const instance = createOnboardInstance();
-        state.instance = instance;
-      }
-    },
-    // connect: (state) => {
-    //   connectOnboard(state);
-    // },
-    checkWallet: (state) => {
-      if (state.instance) {
-        state.instance.walletCheck();
+        state.instance = action.payload;
       }
     },
     updateAddress: (state, action: PayloadAction<string>) => {
-      console.log("in here?", action.payload);
       state.address = action.payload;
     },
     updateNetwork: (state, action: PayloadAction<number>) => {
@@ -61,7 +51,7 @@ export const onboardSlice = createSlice({
 });
 
 export const {
-  initializeOnboard,
+  setOnboard,
   updateAddress,
   updateNetwork,
   updateWallet,

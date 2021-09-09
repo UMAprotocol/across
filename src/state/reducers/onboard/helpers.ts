@@ -9,6 +9,7 @@ import {
 } from "./onboardSlice";
 import Onboard from "bnc-onboard";
 import { Wallet } from "bnc-onboard/dist/src/interfaces";
+import { AppDispatch } from "state/store";
 
 export const infuraId =
   process.env.NEXT_PUBLIC_INFURA_ID || "d5e29c9b9a9d4116a7348113f57770a8";
@@ -102,15 +103,15 @@ export const connectOnboard = createAsyncThunk(
   }
 );
 
-export function createOnboardInstance() {
+export function createOnboardInstance(dispatch: AppDispatch) {
   const instance = Onboard({
     ...onboardBaseConfig(),
     subscriptions: {
       address: (address: string) => {
-        addressThunk(address);
+        dispatch(addressThunk(address));
       },
       network: (networkId: number) => {
-        updateNetwork(networkId);
+        dispatch(updateNetwork(networkId));
 
         // const error = isValidChainId(networkId)
         //   ? undefined
@@ -124,7 +125,7 @@ export function createOnboardInstance() {
       },
       wallet: async (wallet: Wallet) => {
         if (wallet.provider) {
-          updateWallet(wallet.provider);
+          dispatch(updateWallet(wallet.provider));
         }
       },
     },

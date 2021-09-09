@@ -16,10 +16,7 @@ import {
   Network,
   Account,
 } from "state/reducers/network/networkSlice";
-import {
-  initializeOnboard,
-  selectOnboard,
-} from "state/reducers/onboard/onboardSlice";
+import { selectOnboard } from "state/reducers/onboard/onboardSlice";
 import { connectOnboard } from "state/reducers/onboard/helpers";
 
 import styles from "./Counter.module.css";
@@ -33,11 +30,7 @@ export function Counter() {
 
   const incrementValue = Number(incrementAmount) || 0;
   const onboard = useAppSelector(selectOnboard);
-  console.log("onboard", onboard);
 
-  useEffect(() => {
-    dispatch(initializeOnboard());
-  }, [dispatch]);
   return (
     <div>
       <div className={styles.row}>
