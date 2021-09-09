@@ -14,6 +14,8 @@ export const store = configureStore({
     onboard: onboardReducer,
   },
   devTools: true,
+  middleware: (getDefaultMiddleWare) =>
+    getDefaultMiddleWare({ serializableCheck: false }),
 });
 
 export type AppDispatch = typeof store.dispatch;

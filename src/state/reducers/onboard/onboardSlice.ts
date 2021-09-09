@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, Draft } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 import { API as OnboardApi, Wallet } from "bnc-onboard/dist/src/interfaces";
-import { connectOnboard, addressThunk } from "./helpers";
+import { connectOnboard } from "./helpers";
 
 export interface IOnboardState {
   instance: Draft<OnboardApi> | null;
@@ -46,7 +46,6 @@ export const onboardSlice = createSlice({
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(connectOnboard.fulfilled, (state, action) => {});
-    builder.addCase(addressThunk.fulfilled, (state, action) => {});
   },
 });
 

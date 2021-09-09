@@ -108,7 +108,7 @@ export function createOnboardInstance(dispatch: AppDispatch) {
     ...onboardBaseConfig(),
     subscriptions: {
       address: (address: string) => {
-        dispatch(addressThunk(address));
+        dispatch(updateAddress(address));
       },
       network: (networkId: number) => {
         dispatch(updateNetwork(networkId));
@@ -133,11 +133,3 @@ export function createOnboardInstance(dispatch: AppDispatch) {
 
   return instance;
 }
-
-export const addressThunk = createAsyncThunk(
-  "onboard/updateAddy",
-  async (address: string, { dispatch }) => {
-    console.log("dispatch address", dispatch);
-    dispatch(updateAddress(address));
-  }
-);
