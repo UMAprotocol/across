@@ -1,11 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, Draft } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
-import Onboard from "bnc-onboard";
 import { API as OnboardApi, Wallet } from "bnc-onboard/dist/src/interfaces";
-import { onboardBaseConfig } from "./helpers";
+import { connectOnboard, createOnboardInstance } from "./helpers";
 
-interface IOnboardState {
-  instance: OnboardApi | null;
+export interface IOnboardState {
+  instance: Draft<OnboardApi> | null;
   chainId: number;
   address: string;
   error: Error | undefined;
@@ -26,39 +25,38 @@ export const onboardSlice = createSlice({
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
     initializeOnboard: (state) => {
-      const instance = Onboard({
-        ...onboardBaseConfig(),
-        subscriptions: {
-          address: (address: string) => {
-            state.address = address;
-          },
-          network: (networkId: number) => {
-            state.chainId = networkId;
-
-            // const error = isValidChainId(networkId)
-            //   ? undefined
-            //   : new UnsupportedChainIdError(networkId);
-            // update({
-            //   chainId: networkId,
-            // });
-            // if (error) {
-            //   setError(error);
-            // }
-          },
-          wallet: async (wallet: Wallet) => {
-            if (wallet.provider) {
-              state.provider = wallet.provider;
-            }
-          },
-        },
-      });
-      console.log("instance", instance);
-      state.instance = instance;
+      // Only instantiate this once.
+      if (!state.instance) {
+        const instance = createOnboardInstance();
+        state.instance = instance;
+      }
+    },
+    connect: (state) => {
+      connectOnboard(state);
+    },
+    updateAddress: (state, action: PayloadAction<string>) => {
+      state.address = action.payload;
+    },
+    updateNetwork: (state, action: PayloadAction<number>) => {
+      state.chainId = action.payload;
+    },
+    updateWallet: (state, action: PayloadAction<Wallet>) => {
+      state.provider = action.payload;
+    },
+    setError: (state, action: PayloadAction<Error>) => {
+      state.error = action.payload;
     },
   },
 });
 
-export const { initializeOnboard } = onboardSlice.actions;
+export const {
+  initializeOnboard,
+  connect,
+  updateAddress,
+  updateNetwork,
+  updateWallet,
+  setError,
+} = onboardSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

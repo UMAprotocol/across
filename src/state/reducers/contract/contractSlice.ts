@@ -33,12 +33,7 @@ export const contractSlice = createSlice({
       state.error = action.payload;
     },
     resetContractState: (state) => {
-      const is = {
-        value: [] as Draft<Contract>[],
-        error: undefined,
-      };
-
-      state = is;
+      return initialState;
     },
   },
 });

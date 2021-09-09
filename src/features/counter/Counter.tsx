@@ -19,6 +19,7 @@ import {
 import {
   initializeOnboard,
   selectOnboard,
+  connect,
 } from "state/reducers/onboard/onboardSlice";
 import styles from "./Counter.module.css";
 
@@ -38,6 +39,16 @@ export function Counter() {
   }, [dispatch]);
   return (
     <div>
+      <div className={styles.row}>
+        <h2>Connect btn</h2>
+        <button
+          className={styles.button}
+          aria-label="Connect"
+          onClick={() => dispatch(connect())}
+        >
+          Connect
+        </button>
+      </div>
       <div className={styles.row}>
         <h2>Showing off Network Slice</h2>
         <button

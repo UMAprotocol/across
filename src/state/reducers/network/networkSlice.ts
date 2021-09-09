@@ -52,8 +52,8 @@ export const networkSlice = createSlice({
     setNetworkError: (state, action: PayloadAction<Error>) => {
       state.error = action.payload;
     },
-    resetNetworkState: (state) => {
-      state = initialState;
+    resetNetworkState: () => {
+      return initialState;
     },
   },
 });

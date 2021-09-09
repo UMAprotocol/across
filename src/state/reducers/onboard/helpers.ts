@@ -1,4 +1,13 @@
 import { Initialization } from "bnc-onboard/dist/src/interfaces";
+import {
+  IOnboardState,
+  updateAddress,
+  updateNetwork,
+  updateWallet,
+  setError,
+} from "./onboardSlice";
+import Onboard from "bnc-onboard";
+import { Wallet } from "bnc-onboard/dist/src/interfaces";
 
 export const infuraId =
   process.env.NEXT_PUBLIC_INFURA_ID || "d5e29c9b9a9d4116a7348113f57770a8";
@@ -74,4 +83,47 @@ export function onboardBaseConfig(_chainId?: number): Initialization {
     // To prevent providers from requesting block numbers every 4 seconds (see https://github.com/WalletConnect/walletconnect-monorepo/issues/357)
     blockPollingInterval: 1000 * 60 * 60,
   };
+}
+
+export async function connectOnboard(state: IOnboardState) {
+  if (state.instance) {
+    try {
+      await state.instance.walletSelect();
+      await state.instance.walletCheck();
+    } catch (err) {
+      console.log("err", err);
+      setError(new Error("Error in Onboard call"));
+    }
+  }
+}
+
+export function createOnboardInstance() {
+  const instance = Onboard({
+    ...onboardBaseConfig(),
+    subscriptions: {
+      address: (address: string) => {
+        updateAddress(address);
+      },
+      network: (networkId: number) => {
+        updateNetwork(networkId);
+
+        // const error = isValidChainId(networkId)
+        //   ? undefined
+        //   : new UnsupportedChainIdError(networkId);
+        // update({
+        //   chainId: networkId,
+        // });
+        // if (error) {
+        //   setError(error);
+        // }
+      },
+      wallet: async (wallet: Wallet) => {
+        if (wallet.provider) {
+          updateWallet(wallet.provider);
+        }
+      },
+    },
+  });
+
+  return instance;
 }
