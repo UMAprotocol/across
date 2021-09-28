@@ -7,14 +7,12 @@ export async function switchToOptimism(
     await provider.send("wallet_switchEthereumChain", [
       {
         chainId: "0xa",
-
-        // rpcUrl: "https://mainnet.optimism.io",
-        // blockExplorerUrls: ["https://optimistic.etherscan.io"],
-        // nativeCurrency: {
-        //   name: "ETH",
-        //   symbol: "ETH",
-        //   decimals: 18,
-        // },
+        rpcUrl: "https://mainnet.optimism.io",
+        nativeCurrency: {
+          name: "ETH",
+          symbol: "ETH",
+          decimals: 18,
+        },
       },
     ]);
   } catch (switchError) {

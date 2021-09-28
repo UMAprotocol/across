@@ -2,6 +2,7 @@ import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ethers } from "ethers";
 import { ERC20Ethers__factory } from "@uma/contracts-frontend";
 import { PROVIDERS } from "../utils";
+import { balances } from "./accounts";
 
 type GetBalanceArgs = {
   account: string;
@@ -22,9 +23,41 @@ const api = createApi({
                 const contract = ERC20Ethers__factory.connect(token, provider);
                 return contract.balanceOf(account);
               }
+
               return provider.getBalance(account);
             })
           );
+
+          return { data };
+        } catch (err) {
+          return { error: err };
+        }
+      },
+      onQueryStarted: async (
+        { account, tokens },
+        { dispatch, queryFulfilled }
+      ) => {
+        const { data } = await queryFulfilled;
+        dispatch(
+          balances({
+            account,
+            balances: tokens.map((token, idx) => ({
+              token,
+              balance: data[idx],
+            })),
+          })
+        );
+      },
+    }),
+    getETHBalance: build.query<
+      ethers.BigNumber,
+      Omit<GetBalanceArgs, "tokens">
+    >({
+      queryFn: async ({ account, chainId }) => {
+        try {
+          const provider = PROVIDERS[chainId];
+
+          const data = await provider.getBalance(account);
 
           return { data };
         } catch (err) {
@@ -35,5 +68,8 @@ const api = createApi({
   }),
 });
 
-export const { useGetBalancesQuery: useBalances } = api;
+export const {
+  useGetBalancesQuery: useBalances,
+  useGetETHBalanceQuery: useETHBalance,
+} = api;
 export default api;

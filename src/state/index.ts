@@ -3,12 +3,14 @@ import { setupListeners } from "@reduxjs/toolkit/query/react";
 
 import selectAddressReducer from "./selectedAddress";
 import connectionReducer from "./connection";
+import accountsReducer from "./accounts";
 import chainApi from "./chain";
 
 export const store = configureStore({
   reducer: {
     selectedAddress: selectAddressReducer,
     connection: connectionReducer,
+    accounts: accountsReducer,
     [chainApi.reducerPath]: chainApi.reducer,
   },
   devTools: true,

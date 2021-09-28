@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { connect, disconnect, update, updateFromError } from "./connection";
+import { connect, disconnect, update } from "./connection";
 
 const initialState = "";
 export const selectedAddressSlice = createSlice({
@@ -18,10 +18,6 @@ export const selectedAddressSlice = createSlice({
         return state;
       })
       .addCase(update, (state, action) => {
-        state = action.payload.account || state;
-        return state;
-      })
-      .addCase(updateFromError, (state, action) => {
         state = action.payload.account || state;
         return state;
       })

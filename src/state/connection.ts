@@ -35,19 +35,11 @@ const connectionSlice = createSlice({
       state.chainId = action.payload.chainId ?? state.chainId;
       return state;
     },
-    updateFromError: (state, action) => {
-      state.error = undefined;
-      state.provider = action.payload.provider ?? state.provider;
-      state.account = action.payload.account ?? state.account;
-      state.signer = action.payload.signer ?? state.signer;
-      state.chainId = action.payload.chainId ?? state.chainId;
-      return state;
-    },
   },
 });
 
 const { actions, reducer } = connectionSlice;
 // Extract and export each action creator by name
-export const { update, updateFromError, disconnect, connect, error } = actions;
+export const { update, disconnect, connect, error } = actions;
 // Export the reducer, either as a default or named export
 export default reducer;

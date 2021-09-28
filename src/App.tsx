@@ -1,21 +1,19 @@
-import { ethers } from "ethers";
 import React from "react";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Header, Layout, Send, Wallet } from "./components";
 import { useOnboard } from "./hooks";
-import { useConnection } from "./state/hooks";
+import { useConnection, useETHBalance } from "./state/hooks";
 import { formatEther } from "./utils";
 
 function App() {
-  const { account, chainId, provider } = useConnection();
-  const { initOnboard } = useOnboard();
-  const [balance, setBalance] = React.useState<ethers.BigNumber>();
-  React.useEffect(() => {
-    if (account && provider) {
-      provider.getBalance(account).then((balance) => setBalance(balance));
-    }
-  }, [account, provider]);
+  const { account, chainId } = useConnection();
+  const { init } = useOnboard();
+  const { data: balance } = useETHBalance(
+    { account: account ?? "", chainId: chainId ?? 1 },
+    { skip: !account && !chainId }
+  );
+
   return (
     <Router>
       <Header>
@@ -23,7 +21,7 @@ function App() {
           account={account}
           balance={formatEther(balance ?? 0)}
           chainId={chainId}
-          onWalletConnect={initOnboard}
+          onWalletConnect={init}
         />
       </Header>
       <Layout>

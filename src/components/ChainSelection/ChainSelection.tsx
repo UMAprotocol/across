@@ -10,7 +10,7 @@ const ChainSelection: React.FC = () => {
   const { provider, chainId, isConnected } = useConnection();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setError] = React.useState<Error | null>(null);
-  const { initOnboard } = useOnboard();
+  const { init } = useOnboard();
   const isOnOptimism = chainId === 10;
   const actionText = isOnOptimism
     ? null
@@ -19,7 +19,7 @@ const ChainSelection: React.FC = () => {
     : "Connect Wallet";
   const handleClick = () => {
     if (!provider) {
-      initOnboard();
+      init();
     } else if (!isOnOptimism) {
       switchToOptimism(provider).catch(setError);
     }

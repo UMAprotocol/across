@@ -41,7 +41,7 @@ export function useOnboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-  const initOnboard = React.useCallback(async () => {
+  const init = React.useCallback(async () => {
     try {
       await instance.walletSelect();
       await instance.walletCheck();
@@ -56,9 +56,9 @@ export function useOnboard() {
       setError(err as Error);
     }
   }, [connect, instance, setError]);
-  const resetOnboard = React.useCallback(() => {
+  const reset = React.useCallback(() => {
     instance.walletReset();
     disconnect();
   }, [instance, disconnect]);
-  return { initOnboard, resetOnboard };
+  return { init, reset };
 }

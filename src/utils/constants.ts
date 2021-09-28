@@ -80,6 +80,22 @@ export function onboardBaseConfig(_chainId?: number): Initialization {
 
 // Adapted from Coingecko token list here: https://tokens.coingecko.com/uniswap/all.json
 export const COIN_LIST = {
+  1: [
+    {
+      address: "0x7f5c764cbc14f9669b88837ca1490cca17c31607",
+      name: "USD Coin",
+      symbol: "USDC",
+      decimals: 6,
+      logoURI: usdcLogo,
+    },
+    {
+      decimals: 18,
+      name: "Ether",
+      symbol: "ETH",
+      logoURI: ethereumLogo,
+      address: ethers.constants.AddressZero,
+    },
+  ],
   10: [
     {
       address: "0x7f5c764cbc14f9669b88837ca1490cca17c31607",
@@ -95,14 +111,6 @@ export const COIN_LIST = {
       logoURI: ethereumLogo,
       address: ethers.constants.AddressZero,
     },
-    // UMA is not deployed yet on Optimism
-    // {
-    //   address: "0x04fa0d235c4abf4bcf4787af4cf447de572ef828",
-    //   name: "UMA",
-    //   symbol: "UMA",
-    //   decimals: 18,
-    //   logoURI: umaLogo,
-    // },
   ],
 };
 

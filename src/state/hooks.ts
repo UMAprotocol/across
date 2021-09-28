@@ -7,7 +7,6 @@ import {
   connect,
   disconnect,
   update,
-  updateFromError,
   error as errorAction,
 } from "./connection";
 import { ethers } from "ethers";
@@ -29,17 +28,16 @@ export function useConnection() {
     useAppSelector((state) => state.connection);
   const dispatch = useAppDispatch();
   const actions = bindActionCreators(
-    { connect, disconnect, update, updateFromError, errorAction },
+    { connect, disconnect, update, errorAction },
     dispatch
   );
 
   const setUpdate = useCallback(
     (newUpdate) => {
       if (error) {
-        actions.updateFromError(newUpdate);
-      } else {
-        actions.update(newUpdate);
+        actions.errorAction(undefined);
       }
+      actions.update(newUpdate);
     },
     [actions, error]
   );
@@ -63,4 +61,9 @@ export function useConnection() {
   };
 }
 
-export { useBalances } from "./chain";
+export function useAccounts() {
+  const state = useAppSelector((state) => state.accounts);
+  return state;
+}
+
+export { useBalances, useETHBalance } from "./chain";
