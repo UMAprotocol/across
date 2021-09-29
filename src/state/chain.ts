@@ -2,7 +2,8 @@ import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ethers } from "ethers";
 import { ERC20Ethers__factory } from "@uma/contracts-frontend";
 import { PROVIDERS } from "../utils";
-import { balances } from "./accounts";
+import { balances } from "./global";
+import { isValidChainId } from "utils/chainId";
 
 type GetBalanceArgs = {
   account: string;
@@ -34,19 +35,22 @@ const api = createApi({
         }
       },
       onQueryStarted: async (
-        { account, tokens },
+        { account, chainId, tokens },
         { dispatch, queryFulfilled }
       ) => {
-        const { data } = await queryFulfilled;
-        dispatch(
-          balances({
-            account,
-            balances: tokens.map((token, idx) => ({
-              token,
-              balance: data[idx],
-            })),
-          })
-        );
+        if (isValidChainId(chainId)) {
+          const { data } = await queryFulfilled;
+          dispatch(
+            balances({
+              address: account,
+              chainId,
+              balances: tokens.reduce((acc, token, index) => {
+                acc[token] = data[index];
+                return acc;
+              }, {} as Record<string, ethers.BigNumber>),
+            })
+          );
+        }
       },
     }),
     getETHBalance: build.query<

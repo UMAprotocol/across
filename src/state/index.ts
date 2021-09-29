@@ -3,7 +3,7 @@ import { setupListeners } from "@reduxjs/toolkit/query/react";
 
 import selectAddressReducer from "./selectedAddress";
 import connectionReducer from "./connection";
-import accountsReducer from "./accounts";
+import accountsReducer from "./global";
 import chainApi from "./chain";
 
 export const store = configureStore({

@@ -1,6 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ethers } from "ethers";
 
-const initialState = {
+type State = {
+  account?: string;
+  provider?: ethers.providers.BaseProvider;
+  signer?: ethers.Signer;
+  chainId?: number;
+  error?: Error;
+  connector?: any;
+  isConnected: boolean;
+};
+const initialState: State = {
   account: undefined,
   provider: undefined,
   signer: undefined,
@@ -28,7 +38,7 @@ const connectionSlice = createSlice({
       state.error = action.payload;
       return state;
     },
-    update: (state, action) => {
+    update: (state, action: PayloadAction<Omit<State, "isConnected">>) => {
       state.provider = action.payload.provider ?? state.provider;
       state.account = action.payload.account ?? state.account;
       state.signer = action.payload.signer ?? state.signer;
