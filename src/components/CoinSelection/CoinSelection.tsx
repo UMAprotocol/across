@@ -5,20 +5,17 @@ import { ChevronDown } from "react-feather";
 import { SecondaryButton } from "../BaseButton";
 import { COIN_LIST, formatUnits } from "../../utils";
 import { useBalances } from "../../state/chain";
-import { useConnection, useAccounts } from "../../state/hooks";
+import { useConnection, useGlobal } from "../../state/hooks";
 
 const CoinSelection: React.FC = () => {
   const [coinAmount, setCoinAmount] = useState<number>(0);
   const [error, setError] = useState<string>("");
   const { chainId } = useConnection();
-  const {
-    selectedAccount: { account: currentAccount },
-  } = useAccounts();
+  const { currentAccount, currentChainId } = useGlobal();
 
-  const coinList = useMemo(() => COIN_LIST[chainId ?? 10], [chainId]);
+  const coinList = COIN_LIST[currentChainId];
   const { data: balances } = useBalances(
     {
-      // @ts-expect-error this wont ever be undefined as the query wont run if its undefined (see skip below)
       account: currentAccount,
       // @ts-expect-error this wont ever be undefined as the query wont run if its undefined (see skip below)
       chainId,

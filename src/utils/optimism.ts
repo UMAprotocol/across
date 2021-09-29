@@ -8,11 +8,6 @@ export async function switchToOptimism(
       {
         chainId: "0xa",
         rpcUrl: "https://mainnet.optimism.io",
-        nativeCurrency: {
-          name: "ETH",
-          symbol: "ETH",
-          decimals: 18,
-        },
       },
     ]);
   } catch (switchError) {

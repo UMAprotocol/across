@@ -78,11 +78,18 @@ export function onboardBaseConfig(_chainId?: number): Initialization {
   };
 }
 
+type Coin = {
+  address: string;
+  name: string;
+  symbol: string;
+  decimals: number;
+  logoURI: string;
+};
 // Adapted from Coingecko token list here: https://tokens.coingecko.com/uniswap/all.json
-export const COIN_LIST = {
+export const COIN_LIST: Record<number, Coin[]> = {
   1: [
     {
-      address: "0x7f5c764cbc14f9669b88837ca1490cca17c31607",
+      address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
       name: "USD Coin",
       symbol: "USDC",
       decimals: 6,
@@ -122,3 +129,5 @@ export const PROVIDERS: Record<number, ethers.providers.BaseProvider> = {
     `https://mainnet.infura.io/v3/${process.env.REACT_APP_PUBLIC_INFURA_ID}`
   ),
 };
+
+export const OPTIMISM_CHAIN_ID = 10;

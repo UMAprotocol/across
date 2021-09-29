@@ -1,6 +1,7 @@
 import React from "react";
 import { Wallet } from "bnc-onboard/dist/src/interfaces";
 import Onboard from "bnc-onboard";
+import { ethers } from "ethers";
 
 import { useConnection } from "../state/hooks";
 import { onboardBaseConfig } from "../utils/constants";
@@ -29,7 +30,9 @@ export function useOnboard() {
           },
           wallet: async (wallet: Wallet) => {
             if (wallet.provider) {
-              const provider = wallet.provider;
+              const provider = new ethers.providers.Web3Provider(
+                wallet.provider
+              );
 
               update({
                 provider,
@@ -50,7 +53,7 @@ export function useOnboard() {
         connector: instance,
         chainId: state.network,
         account: state.address,
-        provider: state.wallet.provider,
+        provider: new ethers.providers.Web3Provider(state.wallet.provider),
       });
     } catch (err: unknown) {
       setError(err as Error);

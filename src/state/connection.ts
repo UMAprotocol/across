@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 
 type State = {
   account?: string;
-  provider?: ethers.providers.BaseProvider;
+  provider?: ethers.providers.Web3Provider;
   signer?: ethers.Signer;
   chainId?: number;
   error?: Error;

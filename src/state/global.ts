@@ -5,7 +5,7 @@ import { update } from "./connection";
 type Transaction = ethers.Transaction & { meta?: any };
 type Account = {
   account?: string;
-  provider?: ethers.providers.BaseProvider;
+  provider?: ethers.providers.Web3Provider;
   signer?: ethers.Signer;
   transactions: Record<string, Transaction>;
   balances: Record<string, ethers.BigNumber>;
@@ -66,7 +66,11 @@ const globalSlice = createSlice({
   reducers: {
     balances: (state, action: PayloadAction<ChangeBalancesPayload>) => {
       const { address, balances, chainId } = action.payload;
-      state.chains[chainId].accounts[address].balances = balances;
+
+      state.chains[chainId].accounts[address] = {
+        ...state.chains[chainId].accounts[address],
+        balances,
+      };
       return state;
     },
     transactions: (state, action: PayloadAction<ChangeTransactionsPayload>) => {
@@ -74,8 +78,14 @@ const globalSlice = createSlice({
       if (!transaction.hash) {
         return state;
       }
-      state.chains[chainId].accounts[address].transactions[transaction.hash] =
-        transaction;
+
+      state.chains[chainId].accounts[address] = {
+        ...state.chains[chainId].accounts[address],
+        transactions: {
+          ...state.chains[chainId].accounts[address].transactions,
+          [transaction.hash]: transaction,
+        },
+      };
       return state;
     },
   },
@@ -104,14 +114,22 @@ const globalSlice = createSlice({
         (state, action: ReturnType<typeof update>) => {
           const { signer, provider } = action.payload;
           if (signer) {
-            state.chains[state.currentChainId].accounts[
-              state.currentAccount
-            ].signer = signer;
+            state.chains[state.currentChainId].accounts[state.currentAccount] =
+              {
+                ...state.chains[state.currentChainId].accounts[
+                  state.currentAccount
+                ],
+                signer,
+              };
           }
           if (provider) {
-            state.chains[state.currentChainId].accounts[
-              state.currentAccount
-            ].provider = provider;
+            state.chains[state.currentChainId].accounts[state.currentAccount] =
+              {
+                ...state.chains[state.currentChainId].accounts[
+                  state.currentAccount
+                ],
+                provider,
+              };
           }
           return state;
         }

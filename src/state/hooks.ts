@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
 import type { RootState, AppDispatch } from "./";
@@ -9,7 +9,6 @@ import {
   update,
   error as errorAction,
 } from "./connection";
-import { ethers } from "ethers";
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch = () => useDispatch<AppDispatch>();
@@ -42,12 +41,8 @@ export function useConnection() {
     [actions, error]
   );
 
-  const wrappedProvider = useMemo(
-    () => (provider ? new ethers.providers.Web3Provider(provider) : undefined),
-    [provider]
-  );
   return {
-    provider: wrappedProvider,
+    provider,
     account,
     chainId,
     connector,
@@ -61,9 +56,13 @@ export function useConnection() {
   };
 }
 
+export function useGlobal() {
+  return useAppSelector((state) => state.global);
+}
+
 export function useAccounts() {
-  const state = useAppSelector((state) => state.accounts);
-  return state;
+  const state = useGlobal();
+  return state.chains[state.currentChainId].accounts;
 }
 
 export { useBalances, useETHBalance } from "./chain";
