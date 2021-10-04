@@ -2,6 +2,7 @@ import { Initialization } from "bnc-onboard/dist/src/interfaces";
 import { ethers } from "ethers";
 import ethereumLogo from "../assets/ethereum-logo.png";
 import usdcLogo from "../assets/usdc-logo.png";
+import optimismLogo from "../assets/optimism.svg";
 export const BREAKPOINTS = {
   tabletMin: 550,
   laptopMin: 1100,
@@ -130,4 +131,37 @@ export const PROVIDERS: Record<number, ethers.providers.BaseProvider> = {
   ),
 };
 
+export const ADDRESSES: Record<number, { BRIDGE: string }> = {
+  10: {
+    BRIDGE: "",
+  },
+};
+type Chain = {
+  chainId: number;
+  name: string;
+  logoURI: string;
+  rpcUrl?: string;
+  explorerUrl: string;
+  constructExplorerLink: (txHash: string) => string;
+};
+
+export const CHAINS: Record<number, Chain> = {
+  1: {
+    name: "Ethereum Mainnet",
+    chainId: 1,
+    logoURI: ethereumLogo,
+    explorerUrl: "https://etherscan.io/",
+    constructExplorerLink: (txHash: string) =>
+      `https://etherscan.io/tx/${txHash}`,
+  },
+  10: {
+    name: "Optimism",
+    chainId: 10,
+    logoURI: optimismLogo,
+    rpcUrl: "https://mainnet.optimism.io",
+    explorerUrl: "https://optimistic.etherscan.io/",
+    constructExplorerLink: (txHash: string) =>
+      `https://optimistic.etherscan.io/tx/${txHash}`,
+  },
+};
 export const OPTIMISM_CHAIN_ID = 10;
