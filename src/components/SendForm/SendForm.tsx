@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "@emotion/styled";
 
 import {
   Section,
@@ -11,7 +10,7 @@ import {
 import ChainSelection from "../ChainSelection";
 import CoinSelection from "../CoinSelection";
 import AddressSelection from "../AddressSelection";
-import { useConnection, useSelectedSendArgs, useGlobal } from "state/hooks";
+import { useConnection, useGlobal } from "state/hooks";
 import type { Transfer } from "state/transfers";
 
 type Props = {
@@ -20,8 +19,8 @@ type Props = {
 
 const SendForm: React.FC<Props> = ({ onSend }) => {
   const { isConnected } = useConnection();
-  const { address: selectedAddress } = useSelectedSendArgs();
-  const { currentAccount, currentChainId } = useGlobal();
+
+  const { currentChainId } = useGlobal();
 
   // TODO: consider approvals and wrong network as well
   const isCorrectlyConnected = isConnected && currentChainId === 10;
