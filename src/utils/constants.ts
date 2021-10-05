@@ -136,6 +136,12 @@ export const ADDRESSES: Record<number, { BRIDGE: string }> = {
     BRIDGE: "",
   },
 };
+
+type NativeCurrency = {
+  name: string;
+  symbol: string;
+  decimals: 18;
+};
 type Chain = {
   chainId: number;
   name: string;
@@ -143,6 +149,7 @@ type Chain = {
   rpcUrl?: string;
   explorerUrl: string;
   constructExplorerLink: (txHash: string) => string;
+  nativeCurrency: NativeCurrency;
 };
 
 export const CHAINS: Record<number, Chain> = {
@@ -153,6 +160,11 @@ export const CHAINS: Record<number, Chain> = {
     explorerUrl: "https://etherscan.io/",
     constructExplorerLink: (txHash: string) =>
       `https://etherscan.io/tx/${txHash}`,
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+    },
   },
   10: {
     name: "Optimism",
@@ -162,6 +174,11 @@ export const CHAINS: Record<number, Chain> = {
     explorerUrl: "https://optimistic.etherscan.io/",
     constructExplorerLink: (txHash: string) =>
       `https://optimistic.etherscan.io/tx/${txHash}`,
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+    },
   },
 };
 export const OPTIMISM_CHAIN_ID = 10;
