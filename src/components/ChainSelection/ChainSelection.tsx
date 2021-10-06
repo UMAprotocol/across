@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import { PrimaryButton as UnstyledButton } from "../BaseButton";
 import { useOnboard } from "hooks";
 import { useGlobal, useSelectedSendArgs, useConnection } from "state/hooks";
-import { CHAINS, switchToChain } from "utils";
+import { CHAINS, networkFromChainId, switchToChain } from "utils";
 
 const ChainSelection: React.FC = () => {
   const { isConnected, provider } = useConnection();
@@ -16,7 +16,7 @@ const ChainSelection: React.FC = () => {
   const actionText = isOnCorrectChain
     ? null
     : isConnected
-    ? `Switch to ${CHAINS[fromChain].name}`
+    ? `Switch to ${networkFromChainId(fromChain)}`
     : "Connect Wallet";
   const handleClick = () => {
     if (!provider) {
@@ -34,7 +34,7 @@ const ChainSelection: React.FC = () => {
           src={CHAINS[fromChain].logoURI}
           alt={`${CHAINS[fromChain].name}`}
         />
-        <span>Optimism</span>
+        <span>{networkFromChainId(fromChain)}</span>
       </Option>
       {!isOnCorrectChain && <Button onClick={handleClick}>{actionText}</Button>}
     </>
@@ -46,6 +46,7 @@ export default ChainSelection;
 const Button = styled(UnstyledButton)`
   width: 100%;
   font-size: ${18 / 16}rem;
+  text-transform: capitalize;
 `;
 
 const Heading = styled.h3`
@@ -66,4 +67,5 @@ const Option = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 16px;
+  text-transform: capitalize;
 `;

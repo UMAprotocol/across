@@ -17,8 +17,10 @@ export async function switchToChain(
         await provider.send("wallet_addEthereumChain", [
           {
             chainId: ethers.utils.hexValue(chainId),
+            chainName: CHAINS[chainId].name,
             rpcUrls: [CHAINS[chainId].rpcUrl],
             blockExplorerUrls: [CHAINS[chainId].explorerUrl],
+            nativeCurrency: CHAINS[chainId].nativeCurrency,
           },
         ]);
       } catch (addError) {
@@ -29,5 +31,16 @@ export async function switchToChain(
       console.error(`Failed to switch to ${CHAINS[chainId].name}`);
       throw switchError;
     }
+  }
+}
+
+export function networkFromChainId(chainId: number) {
+  switch (chainId) {
+    case 1:
+      return "mainnet";
+    case 10:
+      return "optimism";
+    default:
+      return "unknown";
   }
 }

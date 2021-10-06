@@ -167,7 +167,7 @@ export const CHAINS: Record<number, Chain> = {
     },
   },
   10: {
-    name: "Optimism",
+    name: "Optimistic Ethereum",
     chainId: 10,
     logoURI: optimismLogo,
     rpcUrl: "https://mainnet.optimism.io",
@@ -176,7 +176,7 @@ export const CHAINS: Record<number, Chain> = {
       `https://optimistic.etherscan.io/tx/${txHash}`,
     nativeCurrency: {
       name: "Ether",
-      symbol: "ETH",
+      symbol: "OETH",
       decimals: 18,
     },
   },
