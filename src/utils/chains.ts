@@ -38,8 +38,12 @@ export function networkFromChainId(chainId: number) {
   switch (chainId) {
     case 1:
       return "mainnet";
+    case 42:
+      return "kovan";
     case 10:
       return "optimism";
+    case 69:
+      return "kovan optimism";
     default:
       return "unknown";
   }
