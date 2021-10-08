@@ -10,25 +10,35 @@ import {
 import ChainSelection from "../ChainSelection";
 import CoinSelection from "../CoinSelection";
 import AddressSelection from "../AddressSelection";
-import { useConnection, useGlobal } from "state/hooks";
+import { useConnection, useGlobal, useSelectedSendArgs } from "state/hooks";
 import type { Transfer } from "state/transfers";
+import { useSend } from "hooks";
 
 type Props = {
   onSend: (transfer: Transfer) => void;
 };
 
 const SendForm: React.FC<Props> = ({ onSend }) => {
-  const { isConnected } = useConnection();
-  const { currentChainId } = useGlobal();
+  const { isConnected, signer } = useConnection();
+  const { currentChainId, currentAccount } = useGlobal();
+  const { fromChain, amount, address, asset } = useSelectedSendArgs();
+
+  const { send, error } = useSend();
 
   // TODO: consider approvals and wrong network as well
-  const isCorrectlyConnected = isConnected && currentChainId === 10;
+  const isCorrectlyConnected = isConnected && currentChainId === fromChain;
   const disableButton = !isCorrectlyConnected;
 
   const buttonMsg = isConnected ? "Send" : "Connect Wallet";
 
   const handleSend = () => {
     console.log(`Sending assets...`);
+    send({
+      signer,
+      l1Recipient: address ?? currentAccount,
+      l2Token: asset,
+      amount,
+    });
   };
   return (
     <>

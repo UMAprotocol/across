@@ -3,13 +3,9 @@ import styled from "@emotion/styled";
 import { useSelect } from "downshift";
 import { ChevronDown } from "react-feather";
 import { SecondaryButton } from "../BaseButton";
-import { COIN_LIST, formatUnits } from "../../utils";
-import { useBalances } from "../../state/chain";
-import {
-  useConnection,
-  useGlobal,
-  useSelectedSendArgs,
-} from "../../state/hooks";
+import { COIN_LIST, formatUnits, parseUnits } from "utils";
+import { useBalances } from "state/chain";
+import { useConnection, useGlobal, useSelectedSendArgs } from "state/hooks";
 
 const CoinSelection: React.FC = () => {
   const [coinAmount, setCoinAmount] = useState<number>(0);
@@ -81,7 +77,12 @@ const CoinSelection: React.FC = () => {
       setError("");
     }
     setCoinAmount(value);
-    setAmount({ amount: value });
+    setAmount({
+      amount: parseUnits(
+        String(value),
+        selectedItem ? selectedItem.decimals : coinList[0].decimals
+      ),
+    });
   };
 
   return (

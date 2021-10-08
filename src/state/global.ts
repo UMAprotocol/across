@@ -4,17 +4,10 @@ import { update } from "./connection";
 
 type Transaction = ethers.Transaction & { meta?: any };
 type Account = {
-  account?: string;
-  provider?: ethers.providers.Web3Provider;
-  signer?: ethers.Signer;
   transactions: Record<string, Transaction>;
   balances: Record<string, ethers.BigNumber>;
 };
-type ChainState = {
-  accounts: Record<string, Account>;
-  balances: Record<string, ethers.BigNumber>;
-  transactions: Record<string, Transaction>;
-};
+type ChainState = Record<string, Account>;
 type State = {
   currentChainId: number;
   currentAccount: string;
@@ -22,35 +15,14 @@ type State = {
 };
 
 const initialState: State = {
-  currentChainId: 10,
+  currentChainId: 69,
   currentAccount: "",
   chains: {
-    1: {
-      accounts: {},
-      transactions: {},
-      balances: {},
-    },
-    42: {
-      accounts: {},
-      transactions: {},
-      balances: {},
-    },
-    10: {
-      accounts: {},
-      transactions: {},
-      balances: {},
-    },
-    69: {
-      accounts: {},
-      transactions: {},
-      balances: {},
-    },
-
-    1337: {
-      accounts: {},
-      transactions: {},
-      balances: {},
-    },
+    1: {},
+    42: {},
+    10: {},
+    69: {},
+    1337: {},
   },
 };
 
@@ -73,8 +45,8 @@ const globalSlice = createSlice({
     balances: (state, action: PayloadAction<ChangeBalancesPayload>) => {
       const { address, balances, chainId } = action.payload;
 
-      state.chains[chainId].accounts[address] = {
-        ...state.chains[chainId].accounts[address],
+      state.chains[chainId][address] = {
+        ...state.chains[chainId][address],
         balances,
       };
       return state;
@@ -85,10 +57,10 @@ const globalSlice = createSlice({
         return state;
       }
 
-      state.chains[chainId].accounts[address] = {
-        ...state.chains[chainId].accounts[address],
+      state.chains[chainId][address] = {
+        ...state.chains[chainId][address],
         transactions: {
-          ...state.chains[chainId].accounts[address].transactions,
+          ...state.chains[chainId][address].transactions,
           [transaction.hash]: transaction,
         },
       };
@@ -113,31 +85,6 @@ const globalSlice = createSlice({
         (state, action: PayloadAction<{ chainId: number }>) => {
           const { chainId } = action.payload;
           state.currentChainId = chainId;
-          return state;
-        }
-      )
-      .addMatcher(
-        (action) => action.type === update.type,
-        (state, action: ReturnType<typeof update>) => {
-          const { signer, provider } = action.payload;
-          if (signer) {
-            state.chains[state.currentChainId].accounts[state.currentAccount] =
-              {
-                ...state.chains[state.currentChainId].accounts[
-                  state.currentAccount
-                ],
-                signer,
-              };
-          }
-          if (provider) {
-            state.chains[state.currentChainId].accounts[state.currentAccount] =
-              {
-                ...state.chains[state.currentChainId].accounts[
-                  state.currentAccount
-                ],
-                provider,
-              };
-          }
           return state;
         }
       ),
