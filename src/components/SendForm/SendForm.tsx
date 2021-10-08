@@ -19,7 +19,6 @@ type Props = {
 
 const SendForm: React.FC<Props> = ({ onSend }) => {
   const { isConnected } = useConnection();
-
   const { currentChainId } = useGlobal();
 
   // TODO: consider approvals and wrong network as well
