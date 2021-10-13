@@ -4,6 +4,7 @@ import ethereumLogo from "assets/ethereum-logo.png";
 import usdcLogo from "assets/usdc-logo.png";
 import optimismLogo from "assets/optimism.svg";
 import wethLogo from "assets/weth-logo.svg";
+import arbitrumLogo from "assets/arbitrum-logo.svg";
 export const BREAKPOINTS = {
   tabletMin: 550,
   laptopMin: 1100,
@@ -139,6 +140,22 @@ export const COIN_LIST: Record<number, Coins> = {
       address: ethers.constants.AddressZero,
     },
   ],
+  4: [
+    {
+      address: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
+      name: "Wrapped Ethereum",
+      symbol: "WETH",
+      decimals: 18,
+      logoURI: wethLogo,
+    },
+    {
+      address: ethers.constants.AddressZero,
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      logoURI: ethereumLogo,
+    },
+  ],
   10: [
     {
       address: "0x4200000000000000000000000000000000000006",
@@ -185,17 +202,58 @@ export const COIN_LIST: Record<number, Coins> = {
       address: ethers.constants.AddressZero,
     },
   ],
+  42161: [
+    {
+      address: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+      name: "Wrapped Ethereum",
+      symbol: "WETH",
+      decimals: 18,
+      logoURI: wethLogo,
+    },
+    {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      logoURI: ethereumLogo,
+      address: ethers.constants.AddressZero,
+    },
+  ],
+  421611: [
+    {
+      address: "0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681",
+      name: "Wrapped Ethereum",
+      symbol: "WETH",
+      decimals: 18,
+      logoURI: wethLogo,
+    },
+    {
+      decimals: 18,
+      name: "Ether",
+      symbol: "ETH",
+      logoURI: ethereumLogo,
+      address: ethers.constants.AddressZero,
+    },
+  ],
 };
 
 export const PROVIDERS: Record<number, ethers.providers.BaseProvider> = {
+  1: new ethers.providers.JsonRpcProvider(
+    `https://mainnet.infura.io/v3/${process.env.REACT_APP_PUBLIC_INFURA_ID}`
+  ),
+  4: new ethers.providers.JsonRpcProvider(
+    `https://rinkeby.infura.io/v3/${process.env.REACT_APP_PUBLIC_INFURA_ID}`
+  ),
   10: new ethers.providers.JsonRpcProvider(
     `https://optimism-mainnet.infura.io/v3/${process.env.REACT_APP_PUBLIC_INFURA_ID}`
   ),
   69: new ethers.providers.JsonRpcProvider(
     `https://optimism-kovan.infura.io/v3/${process.env.REACT_APP_PUBLIC_INFURA_ID}`
   ),
-  1: new ethers.providers.JsonRpcProvider(
-    `https://mainnet.infura.io/v3/${process.env.REACT_APP_PUBLIC_INFURA_ID}`
+  42161: new ethers.providers.JsonRpcProvider(
+    `https://arbitrum-mainnet.infura.io/v3/${process.env.REACT_APP_PUBLIC_INFURA_ID}`
+  ),
+  421611: new ethers.providers.JsonRpcProvider(
+    `https://arbitrum-rinkeby.infura.io/v3/${process.env.REACT_APP_PUBLIC_INFURA_ID}`
   ),
 };
 
@@ -205,6 +263,9 @@ export const ADDRESSES: Record<number, { BRIDGE: string }> = {
   },
   69: {
     BRIDGE: "0x2271a5E74eA8A29764ab10523575b41AA52455f0",
+  },
+  421611: {
+    BRIDGE: "0x6999526e507Cc3b03b180BbE05E1Ff938259A874",
   },
 };
 
@@ -250,6 +311,19 @@ export const CHAINS: Record<number, Chain> = {
       decimals: 18,
     },
   },
+  4: {
+    name: "Rinkeby Testnet",
+    chainId: 4,
+    logoURI: ethereumLogo,
+    explorerUrl: "https://rinkeby.etherscan.io",
+    constructExplorerLink: (txHash: string) =>
+      `https://rinkeby.etherscan.io/tx/${txHash}`,
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+    },
+  },
   10: {
     name: "Optimistic Ethereum",
     chainId: 10,
@@ -275,6 +349,34 @@ export const CHAINS: Record<number, Chain> = {
     nativeCurrency: {
       name: "Ether",
       symbol: "KOR",
+      decimals: 18,
+    },
+  },
+  42161: {
+    name: "Arbitrum One",
+    chainId: 42161,
+    logoURI: arbitrumLogo,
+    rpcUrl: "https://arb1.arbitrum.io/rpc ",
+    explorerUrl: "https://arbiscan.io",
+    constructExplorerLink: (txHash: string) =>
+      `https://arbiscan.io/tx/${txHash}`,
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "AETH",
+      decimals: 18,
+    },
+  },
+  421611: {
+    name: "Arbitrum Testnet Rinkeby",
+    chainId: 421611,
+    logoURI: arbitrumLogo,
+    explorerUrl: "https://rinkeby-explorer.arbitrum.io",
+    constructExplorerLink: (txHash: string) =>
+      `https://rinkeby-explorer.arbitrum.io/tx/${txHash}`,
+    rpcUrl: "https://rinkeby.arbitrum.io/rpc",
+    nativeCurrency: {
+      name: "Ether",
+      symbol: "ARETH",
       decimals: 18,
     },
   },

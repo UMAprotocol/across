@@ -11,8 +11,8 @@ type SelectedSendArgsState = {
 };
 
 const initialState: SelectedSendArgsState = {
-  fromChain: 69,
-  toChain: 1,
+  fromChain: 421611,
+  toChain: 4,
   amount: ethers.BigNumber.from(0),
   asset: ethers.constants.AddressZero,
 };
