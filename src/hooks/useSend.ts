@@ -1,7 +1,7 @@
 import { ERC20Ethers__factory } from "@uma/contracts-frontend";
 import { ethers } from "ethers";
 import React, { useCallback } from "react";
-import { useConnection, useGlobal } from "state/hooks";
+import { useGlobal } from "state/hooks";
 import { COIN_LIST, getDepositBox, PROVIDERS, getRelayFees } from "utils";
 
 type SendArgs = {
@@ -63,7 +63,6 @@ export function useSend() {
           instantRelayFee,
           lastBlock.timestamp,
           {
-            // @ts-expect-error TS does not recognize overrides here for some reason
             value: ethToSend,
           }
         );

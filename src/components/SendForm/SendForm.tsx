@@ -23,7 +23,7 @@ const SendForm: React.FC<Props> = ({ onSend }) => {
   const { currentChainId, currentAccount } = useGlobal();
   const { fromChain, amount, address, asset } = useSelectedSendArgs();
 
-  const { send, error } = useSend();
+  const { send } = useSend();
 
   // TODO: consider approvals and wrong network as well
   const isCorrectlyConnected = isConnected && currentChainId === fromChain;
