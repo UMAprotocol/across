@@ -22,16 +22,35 @@ export async function getDeposits(chainId: number) {
   return state;
 }
 
-type RelayFees = {
+export type RelayFees = {
   instantRelayFee: ethers.BigNumber;
   slowRelayFee: ethers.BigNumber;
 };
 
-const HARDCODED_INSTANT_RELAY_FEE = ethers.utils.parseEther("0.005");
-const HARDCODED_SLOW_RELAY_FEE = ethers.utils.parseEther("0.005");
+// This is 5bps so it will always have to be divided by 10,000 to get the actual fee
+const HARDCODED_INSTANT_RELAY_FEE = ethers.BigNumber.from("5");
+const HARDCODED_SLOW_RELAY_FEE = ethers.BigNumber.from("5");
 export async function getRelayFees(): Promise<RelayFees> {
   return {
     instantRelayFee: HARDCODED_INSTANT_RELAY_FEE,
     slowRelayFee: HARDCODED_SLOW_RELAY_FEE,
+  };
+}
+
+export async function getLpFeePct(): Promise<ethers.BigNumber> {
+  return ethers.constants.Zero;
+}
+
+export function getFees(
+  amount: ethers.BigNumber,
+  fees: RelayFees & { lpFeePct: ethers.BigNumber }
+) {
+  const instantRelayFee = amount.mul(fees.instantRelayFee).div(10e4);
+  const slowRelayFee = amount.mul(fees.slowRelayFee).div(10e4);
+  const lpFee = amount.mul(fees.lpFeePct).div(10e4);
+  const totalFee = instantRelayFee.add(slowRelayFee).add(lpFee);
+  return {
+    totalFee,
+    amountAfterFees: amount.sub(totalFee),
   };
 }

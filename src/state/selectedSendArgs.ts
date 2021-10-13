@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { connect, disconnect, update } from "./connection";
 import { ethers } from "ethers";
+import { COIN_LIST, DEFAULT_FROM_CHAIN_ID, DEFAULT_TO_CHAIN_ID } from "utils";
 
 type SelectedSendArgsState = {
   address?: string;
@@ -11,10 +12,10 @@ type SelectedSendArgsState = {
 };
 
 const initialState: SelectedSendArgsState = {
-  fromChain: 421611,
-  toChain: 4,
+  fromChain: DEFAULT_FROM_CHAIN_ID,
+  toChain: DEFAULT_TO_CHAIN_ID,
   amount: ethers.BigNumber.from(0),
-  asset: ethers.constants.AddressZero,
+  asset: COIN_LIST[DEFAULT_FROM_CHAIN_ID][0].symbol,
 };
 
 export const selectedSendArgsSlice = createSlice({

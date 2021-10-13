@@ -381,3 +381,6 @@ export const CHAINS: Record<number, Chain> = {
     },
   },
 };
+
+export const DEFAULT_FROM_CHAIN_ID = 421611;
+export const DEFAULT_TO_CHAIN_ID = 4;

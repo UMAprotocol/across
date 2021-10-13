@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ethers } from "ethers";
+import { DEFAULT_FROM_CHAIN_ID } from "utils";
 import { update } from "./connection";
 
 type Transaction = ethers.Transaction & { meta?: any };
@@ -15,7 +16,7 @@ type State = {
 };
 
 const initialState: State = {
-  currentChainId: 69,
+  currentChainId: DEFAULT_FROM_CHAIN_ID,
   currentAccount: "",
   chains: {
     1: {},
