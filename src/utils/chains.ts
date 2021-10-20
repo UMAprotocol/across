@@ -6,12 +6,14 @@ export async function switchToChain(
   chainId: number
 ) {
   try {
+    console.log("ChainId", chainId, "hexValue", ethers.utils.hexValue(chainId));
     await provider.send("wallet_switchEthereumChain", [
       {
         chainId: ethers.utils.hexValue(chainId),
       },
     ]);
   } catch (switchError: any) {
+    console.log("switchError", switchError);
     if (switchError.code === 4902) {
       try {
         await provider.send("wallet_addEthereumChain", [

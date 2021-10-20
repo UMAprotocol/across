@@ -26,6 +26,8 @@ const ChainSelection: React.FC = () => {
     }
   };
 
+  console.log("provider", provider);
+
   return (
     <>
       <Heading>From</Heading>
@@ -36,7 +38,11 @@ const ChainSelection: React.FC = () => {
         />
         <span>{networkFromChainId(fromChain)}</span>
       </Option>
-      {!isOnCorrectChain && <Button onClick={handleClick}>{actionText}</Button>}
+      {!isOnCorrectChain && (
+        <Button id="cySwapChain" onClick={handleClick}>
+          {actionText}
+        </Button>
+      )}
     </>
   );
 };

@@ -1,4 +1,8 @@
-import { Initialization } from "bnc-onboard/dist/src/interfaces";
+import {
+  Initialization,
+  WalletModule,
+  WalletInitOptions,
+} from "bnc-onboard/dist/src/interfaces";
 import { ethers } from "ethers";
 import ethereumLogo from "assets/ethereum-logo.png";
 import usdcLogo from "assets/usdc-logo.png";
@@ -48,27 +52,55 @@ const getNetworkName = (chainId: number) => {
     case 4: {
       return "rinkeby";
     }
+    case 10: {
+      return "optimism-mainnet";
+    }
   }
 };
+const customExtensionWalletLogo = `	<svg 		height="40" 		viewBox="0 0 40 40" 		width="40" 		xmlns="http://www.w3.org/2000/svg"	>		<path 			d="m2744.99995 1155h9.99997" 			fill="#617bff" 		/>	</svg>`;
+// create custom wallet
+const customInjectedWallet: WalletModule | WalletInitOptions = {
+  name: "Test Wallet",
+  type: "injected",
+  svg: customExtensionWalletLogo,
+  wallet: async (helpers: any) => {
+    const { createLegacyProviderInterface } = helpers;
+    const provider = (window as any).ethereum;
+
+    console.log("provider", provider);
+    return {
+      provider,
+      interface: createLegacyProviderInterface(provider),
+    };
+  },
+  desktop: true,
+};
+
 export function onboardBaseConfig(_chainId?: number): Initialization {
   const chainId = _chainId ?? 1;
   const infuraRpc = `https://${getNetworkName(
     chainId
   )}.infura.io/v3/${infuraId}`;
 
+  const wallets: (WalletModule | WalletInitOptions)[] = [
+    { walletName: "metamask", preferred: true },
+    {
+      walletName: "walletConnect",
+      rpc: { [chainId || 1]: infuraRpc },
+    },
+  ];
+
+  // This is only for testing. Cypress injects this testing variable at the start of tests with cy.visit()
+  // If this var exists, inject our test wallet into the first element of the array.
+  const cypressTesting = localStorage.getItem("cypress-testing");
+
   return {
-    dappId: process.env.NEXT_PUBLIC_ONBOARD_API_KEY || "",
+    dappId: process.env.REACT_APP_PUBLIC_ONBOARD_API_KEY || "",
     hideBranding: true,
     networkId: 10, // Default to main net. If on a different network will change with the subscription.
     walletSelect: {
-      wallets: [
-        { walletName: "metamask", preferred: true },
-        {
-          walletName: "walletConnect",
-          rpc: { [chainId || 1]: infuraRpc },
-        },
-        { walletName: "gnosis" },
-      ],
+      wallets: !cypressTesting ? wallets : [customInjectedWallet, ...wallets],
+      // wallets: [customInjectedWallet, ...wallets],
     },
     walletCheck: [
       { checkName: "connect" },
