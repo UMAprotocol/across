@@ -72,4 +72,8 @@ const Logo = styled.img`
   padding: 4px;
   margin-top: 12px;
 `;
+
+const FormWrapper = styled.div`
+  background-color: #2d2e33;
+`;
 export default PoolForm;
