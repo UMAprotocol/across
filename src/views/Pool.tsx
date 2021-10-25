@@ -9,7 +9,12 @@ const Pool: FC = () => {
   return (
     <Layout>
       <PoolSelection setToken={setToken} />
-      <PoolForm coin={token.symbol} icon={token.logoURI} />
+      <PoolForm
+        symbol={token.symbol}
+        icon={token.logoURI}
+        totalPoolSize="1.25"
+        apy="0.34%"
+      />
     </Layout>
   );
 };

@@ -2,17 +2,29 @@ import { FC } from "react";
 import styled from "@emotion/styled";
 
 interface Props {
-  coin: string;
+  symbol: string;
   icon: string;
+  apy: string;
+  totalPoolSize: string;
 }
 
-const PoolForm: FC<Props> = ({ coin, icon }) => {
+const PoolForm: FC<Props> = ({ symbol, icon, totalPoolSize, apy }) => {
   return (
     <Wrapper>
-      <PoolInfo>
+      <Info>
         <Logo src={icon} />
-        <PoolInfoText>{coin} Pool</PoolInfoText>
-      </PoolInfo>
+        <InfoText>{symbol} Pool</InfoText>
+        <ROIWrapper>
+          <ROIItem>Total Pool Size:</ROIItem>
+          <ROIItem>
+            {totalPoolSize} {symbol}
+          </ROIItem>
+        </ROIWrapper>
+        <ROIWrapper>
+          <ROIItem>Estimated APY:</ROIItem>
+          <ROIItem>{apy}</ROIItem>
+        </ROIWrapper>
+      </Info>
     </Wrapper>
   );
 };
@@ -23,14 +35,32 @@ const Wrapper = styled.div`
   border-radius: 12px;
 `;
 
-const PoolInfo = styled.div`
+const Info = styled.div`
   text-align: center;
 `;
 
-const PoolInfoText = styled.h3`
+const InfoText = styled.h3`
   font-family: "Barlow";
   font-size: 1.5rem;
   color: hsla(231, 6%, 19%, 1);
+`;
+
+const ROIWrapper = styled.div`
+  margin-top: 0.5rem;
+  text-align: left;
+  display: flex;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+`;
+const ROIItem = styled.div`
+  flex-basis: 50%;
+  color: hsla(231, 6%, 19%, 1);
+  font-size: 1rem;
+  align-content: space-between;
+  &:nth-of-type(2) {
+    text-align: right;
+  }
 `;
 const Logo = styled.img`
   width: 30px;
