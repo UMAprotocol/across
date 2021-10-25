@@ -1,6 +1,5 @@
-import React from "react";
 import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
-import { Send, Pool, About, Confirmation } from "views";
+import { Send, Confirmation } from "views";
 import { Header, SuperHeader } from "components";
 import { useConnection, useDeposits, useSend } from "state/hooks";
 import {
@@ -9,6 +8,8 @@ import {
   UnsupportedChainIdError,
   switchChain,
 } from "utils";
+import Pool from "views/Pool";
+import About from "views/About";
 
 function App() {
   const { fromChain } = useSend();
@@ -32,13 +33,13 @@ function App() {
       )}
       <Header />
       <Switch>
+        <Route exact path="/pool" component={Pool} />
+        <Route exact path="/about" component={About} />
         <Route
           exact
           path="/"
           component={showConfirmationScreen ? Confirmation : Send}
         />
-        <Route path="/pool" component={Pool} />
-        <Route path="/about" component={About} />
       </Switch>
     </Router>
   );

@@ -242,6 +242,26 @@ export const TOKENS_LIST: Record<ChainId, TokenList> = {
     },
   ],
 };
+
+export const POOL_LIST: Token[] = [
+  {
+    address: ethers.constants.AddressZero,
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+    logoURI: ethereumLogo,
+    bridgePool: "0xf42bB7EC88d065dF48D60cb672B88F8330f9f764",
+  },
+  {
+    address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    name: "USD Coin",
+    symbol: "USDC",
+    decimals: 6,
+    logoURI: usdcLogo,
+    bridgePool: "0x190978cC580f5A48D55A4A20D0A952FA1dA3C057",
+  },
+];
+
 type ChainInfo = {
   name: string;
   chainId: ChainId;
