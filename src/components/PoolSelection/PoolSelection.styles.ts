@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { SecondaryButton } from "../Buttons";
 import { ChevronDown } from "react-feather";
 import { COLORS } from "utils";
 import { RoundBox as UnstyledBox, ErrorBox as UnstyledErrorBox } from "../Box";
@@ -91,28 +90,7 @@ export const Item = styled.li`
 `;
 
 export const ToggleIcon = styled(ChevronDown)`
-  margin-left: 60px;
-`;
-
-export const MaxButton = styled(SecondaryButton)`
-  text-transform: uppercase;
-  padding: 10px 20px;
-  font-size: ${14 / 16}rem;
-`;
-
-export const Input = styled.input`
-  border: none;
-  font-size: inherit;
-  background-color: inherit;
-  padding: 0;
-  margin: 0;
-  width: 100%;
-  text-align: right;
-  outline: none;
-
-  &::placeholder {
-    color: var(--color-gray-300);
-  }
+  margin-left: 325px;
 `;
 
 export const ErrorBox = styled(UnstyledErrorBox)`

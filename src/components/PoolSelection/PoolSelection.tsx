@@ -21,8 +21,6 @@ import {
   ToggleButton,
   Logo,
   ToggleIcon,
-  MaxButton,
-  Input,
   ErrorBox,
 } from "./PoolSelection.styles";
 
@@ -57,25 +55,6 @@ const PoolSelection = () => {
     },
   });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setInputAmount(value);
-    if (value === "") {
-      setAmount({ amount: ethers.constants.Zero });
-      setError(undefined);
-      return;
-    }
-    try {
-      const amount = parseUnits(value, selectedItem!.decimals);
-      setAmount({ amount });
-      if (error instanceof ParsingError) {
-        setError(undefined);
-      }
-    } catch (e) {
-      setError(new ParsingError());
-    }
-  };
-
   useEffect(() => {
     if (balances && amount && inputAmount !== "") {
       const selectedIndex = POOL_LIST.findIndex(
@@ -94,7 +73,7 @@ const PoolSelection = () => {
         setError(new Error("Insufficient balance."));
       }
     }
-  }, [balances, amount, selectedItem, POOL_LIST, inputAmount]);
+  }, [balances, amount, selectedItem, inputAmount]);
 
   const { block } = useBlocks(toChain);
 
@@ -124,7 +103,7 @@ const PoolSelection = () => {
             <ToggleButton
               type="button"
               {...getToggleButtonProps()}
-              disabled={!isConnected}
+              // disabled={!isConnected}
             >
               <Logo src={selectedItem?.logoURI} alt={selectedItem?.name} />
               <div>{selectedItem?.symbol}</div>
