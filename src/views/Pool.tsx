@@ -1,13 +1,15 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import Layout from "components/Layout";
 import PoolSelection from "components/PoolSelection";
 import PoolForm from "components/PoolForm";
-import { POOL_LIST } from "utils";
+import { POOL_LIST, Token } from "utils";
+
 const Pool: FC = () => {
+  const [token, setToken] = useState<Token>(POOL_LIST[0]);
   return (
     <Layout>
-      <PoolSelection />
-      <PoolForm coin="ETH" icon={POOL_LIST[0].logoURI} />
+      <PoolSelection setToken={setToken} />
+      <PoolForm coin={token.symbol} icon={token.logoURI} />
     </Layout>
   );
 };

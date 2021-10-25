@@ -1,7 +1,9 @@
+import { FC, Dispatch, SetStateAction } from "react";
+
 import { useSelect } from "downshift";
 
-import { useSend, useBalances, useConnection } from "state/hooks";
-import { formatUnits, POOL_LIST } from "utils";
+import { useBalances, useConnection } from "state/hooks";
+import { formatUnits, POOL_LIST, ChainId, Token } from "utils";
 import { Section, SectionTitle } from "../Section";
 
 import {
@@ -15,14 +17,17 @@ import {
   ToggleIcon,
 } from "./PoolSelection.styles";
 
-const PoolSelection = () => {
+interface Props {
+  setToken: Dispatch<SetStateAction<Token>>;
+}
+
+const PoolSelection: FC<Props> = ({ setToken }) => {
   const { account, isConnected } = useConnection();
-  const { setToken, fromChain } = useSend();
 
   const { data: balances } = useBalances(
     {
       account: account!,
-      chainId: fromChain,
+      chainId: ChainId.MAINNET,
     },
     { skip: !account }
   );
@@ -39,7 +44,7 @@ const PoolSelection = () => {
     defaultSelectedItem: POOL_LIST[0],
     onSelectedItemChange: ({ selectedItem }) => {
       if (selectedItem) {
-        setToken({ token: selectedItem.address });
+        setToken(selectedItem);
       }
     },
   });

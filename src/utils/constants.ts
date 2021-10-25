@@ -55,7 +55,8 @@ export enum ChainId {
   ARBITRUM = 42161,
   ARBITRUM_RINKEBY = 421611,
 }
-type Token = {
+
+export type Token = {
   address: string;
   name: string;
   symbol: string;
