@@ -22,7 +22,11 @@ interface Props {
 }
 
 const PoolSelection: FC<Props> = ({ setToken }) => {
-  const { account, isConnected } = useConnection();
+  const {
+    account,
+    // Temp comment out to clear warnings.
+    // isConnected
+  } = useConnection();
 
   const { data: balances } = useBalances(
     {

@@ -19,7 +19,7 @@ import {
   toChain as toChainAction,
   toAddress as toAddressAction,
   error as sendErrorAction,
-  amount,
+  // amount,
 } from "./send";
 import { useAllowance, useBridgeFees } from "./chainApi";
 import { add } from "./transactions";
