@@ -15,6 +15,8 @@ export const RoundBox = styled(UnstyledBox)`
   font-size: ${16 / 16}rem;
   padding: 10px 15px;
   margin-top: 16px;
+  margin-right: auto;
+  margin-left: auto;
   flex: 2;
   display: flex;
   &:not(:first-of-type):focus-within {
