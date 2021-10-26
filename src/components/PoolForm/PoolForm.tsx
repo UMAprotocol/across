@@ -1,8 +1,8 @@
 import { FC, useState, ChangeEvent } from "react";
 import { ethers } from "ethers";
-import PoolFormSlider from "./PoolFormSlider";
 import Tabs from "../Tabs";
-import PoolFormElements from "./PoolFormElements";
+import AddLiquidityForm from "./AddLiquidityForm";
+import RemoveLiqudityForm from "./RemoveLiquidityForm";
 import {
   Wrapper,
   Info,
@@ -15,9 +15,6 @@ import {
   PositionBlock,
   PositionBlockItem,
   PositionBlockItemBold,
-  RemoveAmount,
-  RemovePercentButtonsWrapper,
-  RemovePercentButton,
 } from "./PoolForm.styles";
 
 interface Props {
@@ -41,7 +38,6 @@ const PoolForm: FC<Props> = ({
   const [removeAmount, setRemoveAmount] = useState(0);
   const [error] = useState<Error>();
 
-  console.log("remove amount", removeAmount);
   return (
     <Wrapper>
       <Info>
@@ -80,9 +76,9 @@ const PoolForm: FC<Props> = ({
       </Info>
       <Tabs>
         <TabContentWrapper data-label="Add">
-          <PoolFormElements
+          <AddLiquidityForm
             error={error}
-            value={inputAmount}
+            amount={inputAmount}
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               setInputAmount(event.target.value)
             }
@@ -90,24 +86,10 @@ const PoolForm: FC<Props> = ({
           />
         </TabContentWrapper>
         <TabContentWrapper data-label="Remove">
-          <RemoveAmount>
-            Amount: <span>{removeAmount}%</span>
-          </RemoveAmount>
-          <PoolFormSlider value={removeAmount} setValue={setRemoveAmount} />
-          <RemovePercentButtonsWrapper>
-            <RemovePercentButton onClick={() => setRemoveAmount(25)}>
-              25%
-            </RemovePercentButton>
-            <RemovePercentButton onClick={() => setRemoveAmount(50)}>
-              50%
-            </RemovePercentButton>
-            <RemovePercentButton onClick={() => setRemoveAmount(75)}>
-              75%
-            </RemovePercentButton>
-            <RemovePercentButton onClick={() => setRemoveAmount(100)}>
-              Max
-            </RemovePercentButton>
-          </RemovePercentButtonsWrapper>
+          <RemoveLiqudityForm
+            removeAmount={removeAmount}
+            setRemoveAmount={setRemoveAmount}
+          />
         </TabContentWrapper>
       </Tabs>
     </Wrapper>

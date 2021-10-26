@@ -6,16 +6,16 @@ import {
   FormButton,
   InputGroup,
   FormHeader,
-} from "./PoolFormElements.styles";
+} from "./AddLiquidityForm.styles";
 
 interface Props {
   error: Error | undefined;
-  value: string;
+  amount: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   buttonClickHandler: () => void;
 }
 
-const PoolFormElements: FC<Props> = ({ error, value, onChange }) => {
+const AddLiquidityForm: FC<Props> = ({ error, amount, onChange }) => {
   return (
     <>
       <FormHeader>Amount</FormHeader>
@@ -43,7 +43,7 @@ const PoolFormElements: FC<Props> = ({ error, value, onChange }) => {
           <Input
             placeholder="0.00"
             id="amount"
-            value={value}
+            value={amount}
             onChange={onChange}
             // disabled={!isConnected}
           />
@@ -54,4 +54,4 @@ const PoolFormElements: FC<Props> = ({ error, value, onChange }) => {
   );
 };
 
-export default PoolFormElements;
+export default AddLiquidityForm;
