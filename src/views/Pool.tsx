@@ -1,4 +1,5 @@
 import { FC, useState } from "react";
+import { ethers } from "ethers";
 import Layout from "components/Layout";
 import PoolSelection from "components/PoolSelection";
 import PoolForm from "components/PoolForm";
@@ -14,6 +15,8 @@ const Pool: FC = () => {
         icon={token.logoURI}
         totalPoolSize="1.25"
         apy="0.34%"
+        position={ethers.BigNumber.from("3")}
+        feesEarned={ethers.BigNumber.from("1")}
       />
     </Layout>
   );

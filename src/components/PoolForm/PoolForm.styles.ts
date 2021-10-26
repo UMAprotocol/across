@@ -86,3 +86,15 @@ export const PositionBlockItem = styled.div`
 export const PositionBlockItemBold = styled(PositionBlockItem)`
   font-weight: 700;
 `;
+
+export const RemoveAmount = styled.div`
+  font-size: 1.25rem;
+  color: #fff;
+  font-weight: 700;
+  font-family: "Barlow";
+  padding-bottom: 2rem;
+  padding-left: 0.5rem;
+  span {
+    color: hsla(166, 92%, 70%, 1);
+  }
+`;

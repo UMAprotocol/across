@@ -1,4 +1,6 @@
 import { FC, useState, ChangeEvent } from "react";
+import { ethers } from "ethers";
+import PoolFormSlider from "./PoolFormSlider";
 import Tabs from "../Tabs";
 import PoolFormElements from "./PoolFormElements";
 import {
@@ -13,6 +15,7 @@ import {
   PositionBlock,
   PositionBlockItem,
   PositionBlockItemBold,
+  RemoveAmount,
 } from "./PoolForm.styles";
 
 interface Props {
@@ -20,17 +23,23 @@ interface Props {
   icon: string;
   apy: string;
   totalPoolSize: string;
+  position: ethers.BigNumber;
+  feesEarned: ethers.BigNumber;
 }
 
-const PoolForm: FC<Props> = ({ symbol, icon, totalPoolSize, apy }) => {
+const PoolForm: FC<Props> = ({
+  symbol,
+  icon,
+  totalPoolSize,
+  apy,
+  position,
+  feesEarned,
+}) => {
   const [inputAmount, setInputAmount] = useState("");
+  const [removeAmount, setRemoveAmount] = useState(0);
   const [error] = useState<Error>();
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setInputAmount(value);
-  };
-
+  console.log("remove amount", removeAmount);
   return (
     <Wrapper>
       <Info>
@@ -39,15 +48,21 @@ const PoolForm: FC<Props> = ({ symbol, icon, totalPoolSize, apy }) => {
         <PositionWrapper>
           <PositionBlock>
             <PositionBlockItem>My position</PositionBlockItem>
-            <PositionBlockItem>1.55 ETH</PositionBlockItem>
+            <PositionBlockItem>
+              {position.toString()} {symbol}
+            </PositionBlockItem>
           </PositionBlock>
           <PositionBlock>
             <PositionBlockItem>Fees earned</PositionBlockItem>
-            <PositionBlockItem>0.45ETH</PositionBlockItem>
+            <PositionBlockItem>
+              {feesEarned.toString()} {symbol}
+            </PositionBlockItem>
           </PositionBlock>
           <PositionBlock>
             <PositionBlockItemBold>Total</PositionBlockItemBold>
-            <PositionBlockItemBold>2.00 ETH</PositionBlockItemBold>
+            <PositionBlockItemBold>
+              {position.add(feesEarned).toString()} ETH
+            </PositionBlockItemBold>
           </PositionBlock>
         </PositionWrapper>
         <ROIWrapper>
@@ -66,17 +81,17 @@ const PoolForm: FC<Props> = ({ symbol, icon, totalPoolSize, apy }) => {
           <PoolFormElements
             error={error}
             value={inputAmount}
-            onChange={handleChange}
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              setInputAmount(event.target.value)
+            }
             buttonClickHandler={() => console.log("Add")}
           />
         </TabContentWrapper>
         <TabContentWrapper data-label="Remove">
-          <PoolFormElements
-            error={error}
-            value={inputAmount}
-            onChange={handleChange}
-            buttonClickHandler={() => console.log("Remove")}
-          />
+          <RemoveAmount>
+            Amount: <span>{removeAmount}%</span>
+          </RemoveAmount>
+          <PoolFormSlider value={removeAmount} setValue={setRemoveAmount} />
         </TabContentWrapper>
       </Tabs>
     </Wrapper>
