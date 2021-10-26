@@ -16,6 +16,8 @@ import {
   PositionBlockItem,
   PositionBlockItemBold,
   RemoveAmount,
+  RemovePercentButtonsWrapper,
+  RemovePercentButton,
 } from "./PoolForm.styles";
 
 interface Props {
@@ -92,6 +94,20 @@ const PoolForm: FC<Props> = ({
             Amount: <span>{removeAmount}%</span>
           </RemoveAmount>
           <PoolFormSlider value={removeAmount} setValue={setRemoveAmount} />
+          <RemovePercentButtonsWrapper>
+            <RemovePercentButton onClick={() => setRemoveAmount(25)}>
+              25%
+            </RemovePercentButton>
+            <RemovePercentButton onClick={() => setRemoveAmount(50)}>
+              50%
+            </RemovePercentButton>
+            <RemovePercentButton onClick={() => setRemoveAmount(75)}>
+              75%
+            </RemovePercentButton>
+            <RemovePercentButton onClick={() => setRemoveAmount(100)}>
+              Max
+            </RemovePercentButton>
+          </RemovePercentButtonsWrapper>
         </TabContentWrapper>
       </Tabs>
     </Wrapper>

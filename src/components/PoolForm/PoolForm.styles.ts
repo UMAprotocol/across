@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-
+import { BaseButton } from "components";
 export const Wrapper = styled.div`
   height: 82vh;
   background-color: #6cf9d8;
@@ -97,4 +97,18 @@ export const RemoveAmount = styled.div`
   span {
     color: hsla(166, 92%, 70%, 1);
   }
+`;
+
+export const RemovePercentButtonsWrapper = styled.div`
+  display: flex;
+  margin-top: 2rem;
+  justify-content: space-between;
+`;
+
+export const RemovePercentButton = styled(BaseButton)`
+  flex-basis: 20%;
+  justify-content: space-evenly;
+  background-color: hsla(0, 0%, 100%, 1);
+  color: hsla(230, 6%, 19%, 1);
+  font-size: 0.875rem;
 `;

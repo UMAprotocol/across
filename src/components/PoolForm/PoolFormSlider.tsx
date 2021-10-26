@@ -11,6 +11,7 @@ const PoolFormSlider: FC<Props> = ({ value, setValue }) => {
     <Slider
       className="PoolForm-slider"
       defaultValue={value}
+      value={value}
       thumbClassName="PoolForm-thumb"
       trackClassName="PoolForm-track"
       onChange={(v) => {
