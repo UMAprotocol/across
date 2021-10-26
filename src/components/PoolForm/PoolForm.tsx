@@ -9,6 +9,10 @@ import {
   ROIItem,
   Logo,
   TabContentWrapper,
+  PositionWrapper,
+  PositionBlock,
+  PositionBlockItem,
+  PositionBlockItemBold,
 } from "./PoolForm.styles";
 
 interface Props {
@@ -32,6 +36,20 @@ const PoolForm: FC<Props> = ({ symbol, icon, totalPoolSize, apy }) => {
       <Info>
         <Logo src={icon} />
         <InfoText>{symbol} Pool</InfoText>
+        <PositionWrapper>
+          <PositionBlock>
+            <PositionBlockItem>My position</PositionBlockItem>
+            <PositionBlockItem>1.55 ETH</PositionBlockItem>
+          </PositionBlock>
+          <PositionBlock>
+            <PositionBlockItem>Fees earned</PositionBlockItem>
+            <PositionBlockItem>0.45ETH</PositionBlockItem>
+          </PositionBlock>
+          <PositionBlock>
+            <PositionBlockItemBold>Total</PositionBlockItemBold>
+            <PositionBlockItemBold>2.00 ETH</PositionBlockItemBold>
+          </PositionBlock>
+        </PositionWrapper>
         <ROIWrapper>
           <ROIItem>Total Pool Size:</ROIItem>
           <ROIItem>
