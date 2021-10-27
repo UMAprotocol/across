@@ -1,24 +1,9 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { ethers } from "ethers";
-import { multicallTwoAddress } from "utils";
-import * as umaSDK from "@uma/sdk";
-
-const { ReadClient } = umaSDK.across.clients.bridgePool;
-// const wethAddress = "0x75a29a66452C80702952bbcEDd284C8c4CF5Ab17";
-
-const provider = new ethers.providers.JsonRpcProvider(
-  `https://mainnet.infura.io/v3/${process.env.REACT_APP_PUBLIC_INFURA_ID}`
-);
-
-async function fetchPoolState(address: string) {
-  try {
-    const readClient = new ReadClient(address, provider, multicallTwoAddress);
-    const res = await readClient.read();
-    return res.pool;
-  } catch (err) {
-    return err;
-  }
-}
+import {
+  fetchPoolState,
+  fetchUserPoolData,
+  FetchUserPoolDataResponse,
+} from "./poolsApi";
 
 export const getPoolState = createAsyncThunk(
   "pools/getPoolState",
@@ -28,7 +13,38 @@ export const getPoolState = createAsyncThunk(
     return response;
   }
 );
-interface Pool {
+
+export const getUserPoolState = createAsyncThunk(
+  "pools/getUserPoolData",
+  async ({
+    account,
+    poolAddress,
+  }: {
+    account: string;
+    poolAddress: string;
+  }) => {
+    const response = (await fetchUserPoolData(
+      account,
+      poolAddress
+    )) as FetchUserPoolDataResponse;
+    // The value we return becomes the `fulfilled` action payload
+    return response;
+  }
+);
+
+/* 
+From Docs:
+  PoolState: {
+    address: "0x75a29a66452C80702952bbcEDd284C8c4CF5Ab17"
+    estimatedApy: "0.0014610627461143652"
+    exchangeRateCurrent: "1000002229851888803"
+    exchangeRatePrevious: "1000002229222859216"
+    l1Token: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+    totalPoolSize: "14626089757879757436"
+  }
+*/
+
+export interface Pool {
   address: string;
   estimatedApy: string;
   exchangeRateCurrent: string;
@@ -37,22 +53,32 @@ interface Pool {
   totalPoolSize: string;
 }
 
-/*
-PoolState:
-{
-  address: "0x75a29a66452C80702952bbcEDd284C8c4CF5Ab17"
-  estimatedApy: "0.0014610627461143652"
-  exchangeRateCurrent: "1000002229851888803"
-  exchangeRatePrevious: "1000002229222859216"
-  l1Token: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
-  totalPoolSize: "14626089757879757436"
+//  user: {
+//    address: '0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D',
+//    lpTokens: '900000000000000000',
+//    positionValue: '900000541941830509',
+//    totalDeposited: '900000000000000000',
+//    feesEarned: '541941830509'
+//  },
+
+export interface UserPoolData {
+  address: string;
+  lpTokens: string;
+  positionValue: string;
+  totalDeposited: string;
+  feesEarned: string;
 }
-*/
+
+interface UserData {
+  [account: string]: {
+    userPoolsData: UserPoolData[];
+  };
+}
 
 interface State {
   pools: Pool[];
+  userData: UserData;
   status: Status;
-
   error?: Error;
 }
 
@@ -60,6 +86,7 @@ type Status = "idle" | "loading";
 
 const initialState: State = {
   pools: [] as Pool[],
+  userData: {} as UserData,
   status: "idle",
   error: undefined,
 };
@@ -86,10 +113,36 @@ const poolsSlice = createSlice({
       })
       .addCase(getPoolState.fulfilled, (state, action) => {
         state.status = "idle";
-        const replaceOldState = state.pools.filter(
+        const nextState = state.pools.filter(
           (x) => x.address !== action.payload.address
         );
-        state.pools = [...replaceOldState, action.payload];
+        state.pools = [...nextState, action.payload];
+
+        return state;
+      })
+      .addCase(getUserPoolState.pending, (state, action) => {
+        state.status = "loading";
+
+        return state;
+      })
+      .addCase(getUserPoolState.fulfilled, (state, action) => {
+        state.status = "idle";
+        const userAddress = action.payload.user.address;
+
+        if (Object.keys(state.userData).length && state.userData[userAddress]) {
+          const nextState = state.userData[userAddress].userPoolsData.filter(
+            (x) => x.address !== action.payload.pool.address
+          );
+
+          state.userData[userAddress].userPoolsData = nextState;
+        } else {
+          const nextState = [];
+          nextState.push(action.payload.user);
+
+          state.userData[userAddress].userPoolsData = nextState;
+        }
+
+        return state;
       }),
 });
 

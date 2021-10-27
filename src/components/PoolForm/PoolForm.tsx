@@ -3,8 +3,7 @@ import { ethers } from "ethers";
 import Tabs from "../Tabs";
 import AddLiquidityForm from "./AddLiquidityForm";
 import RemoveLiqudityForm from "./RemoveLiquidityForm";
-import { useOnboard } from "hooks";
-import { useConnection } from "state/hooks";
+
 import {
   Wrapper,
   Info,
@@ -36,8 +35,6 @@ const PoolForm: FC<Props> = ({
   position,
   feesEarned,
 }) => {
-  const { init } = useOnboard();
-  const { isConnected, provider } = useConnection();
   const [inputAmount, setInputAmount] = useState("");
   const [removeAmount, setRemoveAmount] = useState(0);
   const [error] = useState<Error>();
