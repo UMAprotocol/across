@@ -41,6 +41,7 @@ const CoinSelection = () => {
     { skip: !account }
   );
 
+  console.log({ balances: balances?.map((b) => b.toString()) });
   const {
     isOpen,
     selectedItem,
@@ -156,7 +157,7 @@ const CoinSelection = () => {
                   <div>{token.name}</div>
                   <div>
                     {balances &&
-                      formatUnits(balances[index], selectedItem!.decimals)}
+                      formatUnits(balances[index], tokenList[index].decimals)}
                   </div>
                 </Item>
               ))}
