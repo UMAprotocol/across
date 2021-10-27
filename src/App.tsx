@@ -1,5 +1,5 @@
 import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
-import { Send, Confirmation } from "views";
+import { Send, Confirmation, Pool, About } from "views";
 import { Header, SuperHeader } from "components";
 import { useConnection, useDeposits, useSend } from "state/hooks";
 import {
@@ -8,8 +8,6 @@ import {
   UnsupportedChainIdError,
   switchChain,
 } from "utils";
-import Pool from "views/Pool";
-import About from "views/About";
 
 function App() {
   const { fromChain } = useSend();
@@ -33,7 +31,10 @@ function App() {
       )}
       <Header />
       <Switch>
-        <Route exact path="/pool" component={Pool} />
+        {process.env.HIDE_POOL ? (
+          <Route exact path="/pool" component={Pool} />
+        ) : null}
+
         <Route exact path="/about" component={About} />
         <Route
           exact

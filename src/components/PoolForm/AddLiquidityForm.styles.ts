@@ -56,7 +56,6 @@ export const InputGroup = styled.div`
 `;
 
 export const FormHeader = styled.h2`
-  font-family: "Barlow";
   font-weight: 600;
   font-size: 1.25rem;
   line-height: 1.5rem;
