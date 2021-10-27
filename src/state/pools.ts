@@ -134,12 +134,15 @@ const poolsSlice = createSlice({
             (x) => x.address !== action.payload.pool.address
           );
 
-          state.userData[userAddress].userPoolsData = nextState;
+          state.userData[userAddress].userPoolsData = [
+            ...nextState,
+            action.payload.user,
+          ];
         } else {
           const nextState = [];
           nextState.push(action.payload.user);
 
-          state.userData[userAddress].userPoolsData = nextState;
+          state.userData[userAddress] = { userPoolsData: nextState };
         }
 
         return state;
