@@ -23,7 +23,7 @@ interface Props {
   symbol: string;
   icon: string;
   apy: string;
-  totalPoolSize: string;
+  totalPoolSize: ethers.BigNumber;
   position: ethers.BigNumber;
   feesEarned: ethers.BigNumber;
 }
@@ -63,14 +63,14 @@ const PoolForm: FC<Props> = ({
           <PositionBlock>
             <PositionBlockItemBold>Total</PositionBlockItemBold>
             <PositionBlockItemBold>
-              {position.add(feesEarned).toString()} ETH
+              {position.add(feesEarned).toString()} {symbol}
             </PositionBlockItemBold>
           </PositionBlock>
         </PositionWrapper>
         <ROIWrapper>
           <ROIItem>Total Pool Size:</ROIItem>
           <ROIItem>
-            {totalPoolSize} {symbol}
+            {ethers.utils.formatEther(totalPoolSize)} {symbol}
           </ROIItem>
         </ROIWrapper>
         <ROIWrapper>
@@ -86,7 +86,6 @@ const PoolForm: FC<Props> = ({
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               setInputAmount(event.target.value)
             }
-            buttonClickHandler={() => console.log("Add")}
           />
         </TabContentWrapper>
         <TabContentWrapper data-label="Remove">

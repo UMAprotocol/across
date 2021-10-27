@@ -14,7 +14,6 @@ async function fetchPoolState(address: string) {
   try {
     const readClient = new ReadClient(address, provider, multicallTwoAddress);
     const res = await readClient.read();
-    console.log("Res??", res);
     return res.pool;
   } catch (err) {
     return err;
@@ -87,7 +86,10 @@ const poolsSlice = createSlice({
       })
       .addCase(getPoolState.fulfilled, (state, action) => {
         state.status = "idle";
-        state.pools = [...state.pools, action.payload];
+        const replaceOldState = state.pools.filter(
+          (x) => x.address !== action.payload.address
+        );
+        state.pools = [...replaceOldState, action.payload];
       }),
 });
 

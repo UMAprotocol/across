@@ -4,18 +4,44 @@ import Layout from "components/Layout";
 import PoolSelection from "components/PoolSelection";
 import PoolForm from "components/PoolForm";
 import { POOL_LIST, Token } from "utils";
-import { useAppDispatch, useAppSelector } from "state/hooks";
+import { useAppDispatch, useAppSelector, useConnection } from "state/hooks";
 import { getPoolState } from "state/pools";
 
 const Pool: FC = () => {
   const [token, setToken] = useState<Token>(POOL_LIST[0]);
+  const [totalPoolSize, setTotalPoolSize] = useState(
+    ethers.BigNumber.from("0")
+  );
+  const [apy, setApy] = useState("0.00%");
+  const [position, setPosition] = useState(ethers.BigNumber.from("0"));
+  const [feesEarned, setFeesEarned] = useState(ethers.BigNumber.from("0"));
   const dispatch = useAppDispatch();
-  const pools = useAppSelector((state) => state.pools);
+  const pools = useAppSelector((state) => state.pools.pools);
+  const connection = useAppSelector((state) => state.connection);
+
+  const { isConnected, provider } = useConnection();
+
+  // Get pool state on mount of view.
   useEffect(() => {
-    dispatch(getPoolState(POOL_LIST[0].bridgePool));
+    POOL_LIST.forEach((p) => dispatch(getPoolState(p.bridgePool)));
   }, [dispatch]);
 
-  console.log("pools", pools);
+  useEffect(() => {
+    const pool = pools.find((p) => {
+      return p.address === token.bridgePool;
+    });
+
+    if (pool) {
+      setTotalPoolSize(ethers.BigNumber.from(pool.totalPoolSize));
+      setApy(`${pool.estimatedApy}%`);
+    }
+  }, [token, pools]);
+
+  useEffect(() => {
+    if (isConnected) {
+      // dispatch()
+    }
+  }, [isConnected]);
 
   return (
     <Layout>
@@ -23,10 +49,10 @@ const Pool: FC = () => {
       <PoolForm
         symbol={token.symbol}
         icon={token.logoURI}
-        totalPoolSize="1.25"
-        apy="0.34%"
-        position={ethers.BigNumber.from("3")}
-        feesEarned={ethers.BigNumber.from("1")}
+        totalPoolSize={totalPoolSize}
+        apy={apy}
+        position={position}
+        feesEarned={feesEarned}
       />
     </Layout>
   );
