@@ -112,11 +112,13 @@ const poolsSlice = createSlice({
   extraReducers: (builder) =>
     builder
       .addCase(getPoolState.fulfilled, (state, action) => {
-        // const nextState = state.pools.filter(
-        //   (x) => x.address !== action.payload.address
-        // );
-        // state.pools = [...nextState, action.payload];
-        state.pools[action.payload.address] = action.payload;
+        const modData = {
+          ...action.payload,
+          address: action.payload.address.toLowerCase(),
+        };
+
+        state.pools[action.payload.address] = modData;
+        // state.pools[action.payload.address] = action.payload;
 
         return state;
       })

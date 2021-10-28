@@ -26,16 +26,16 @@ function getReadClient(
   return readClient;
 }
 export async function fetchPoolState(address: string) {
-  return {};
+  // return {};
   // Comment out onreachable code for now
 
-  // try {
-  //   const readClient = getReadClient(address)
-  //   const res = await readClient.read();
-  //   return res.pool;
-  // } catch (err) {
-  //   return err;
-  // }
+  try {
+    const readClient = getReadClient(address);
+    const res = await readClient.read();
+    return res.pool;
+  } catch (err) {
+    return err;
+  }
 }
 
 export interface FetchUserPoolDataResponse {
