@@ -36,7 +36,7 @@ const Pool: FC = () => {
 
     if (pool) {
       setTotalPoolSize(ethers.BigNumber.from(pool.totalPoolSize));
-      setApy(`${pool.estimatedApy}%`);
+      setApy(`${Number(pool.estimatedApy) * 100}%`);
     }
   }, [token, pools]);
 
