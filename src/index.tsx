@@ -10,7 +10,6 @@ ReactDOM.render(
   <React.StrictMode>
     <GlobalStyles />
     <Provider store={store}>
-      <BlockPoller />
       <App />
     </Provider>
   </React.StrictMode>,

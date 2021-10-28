@@ -47,8 +47,6 @@ const api = createApi({
                 provider
               );
               const balance = await contract.balanceOf(account);
-
-              console.log({ balance, token, contract });
               return balance;
             })
           );
@@ -105,13 +103,12 @@ const api = createApi({
           //   total: ethers.constants.Zero,
           //   pct: ethers.constants.Zero,
           // };
-          console.log({ instantRelayFee, slowRelayFee, lpFee, blockNumber });
           return {
             data: { instantRelayFee, slowRelayFee, lpFee, isAmountTooLow },
           };
         } catch (error) {
-          console.log("bridge fee calculation failed");
-          console.log(error);
+          console.error("bridge fee calculation failed");
+          console.error(error);
           return { error };
         }
       },

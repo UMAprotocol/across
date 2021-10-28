@@ -23,6 +23,7 @@ interface Props {
   icon: string;
   apy: string;
   totalPoolSize: ethers.BigNumber;
+  totalPosition: ethers.BigNumber;
   position: ethers.BigNumber;
   feesEarned: ethers.BigNumber;
 }
@@ -31,6 +32,7 @@ const PoolForm: FC<Props> = ({
   symbol,
   icon,
   totalPoolSize,
+  totalPosition,
   apy,
   position,
   feesEarned,
@@ -60,7 +62,7 @@ const PoolForm: FC<Props> = ({
           <PositionBlock>
             <PositionBlockItemBold>Total</PositionBlockItemBold>
             <PositionBlockItemBold>
-              {ethers.utils.formatEther(position.add(feesEarned))} {symbol}
+              {ethers.utils.formatEther(totalPosition)} {symbol}
             </PositionBlockItemBold>
           </PositionBlock>
         </PositionWrapper>

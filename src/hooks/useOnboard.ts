@@ -5,6 +5,9 @@ import { ethers } from "ethers";
 import { onboardBaseConfig } from "utils";
 import { useConnection } from "state/hooks";
 
+function getAddress(address:string){
+  return ethers.utils.getAddress(address)
+}
 export function useOnboard() {
   const { disconnect, setUpdate, setError } = useConnection();
 
@@ -14,7 +17,7 @@ export function useOnboard() {
         ...onboardBaseConfig(),
         subscriptions: {
           address: (address: string) => {
-            setUpdate({ account: address });
+            setUpdate({ account: getAddress(address) });
           },
           network: (chainIdInHex) => {
             if (chainIdInHex == null) {
@@ -28,7 +31,7 @@ export function useOnboard() {
             const provider = new ethers.providers.Web3Provider(wallet.provider);
             const signer = provider.getSigner();
             setUpdate({
-              account: wallet.provider.selectedAddress,
+              account: getAddress(wallet.provider.selectedAddress),
               provider,
               signer,
             });

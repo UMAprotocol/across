@@ -14,6 +14,7 @@ const Pool: FC = () => {
   );
   const [apy, setApy] = useState("0.00%");
   const [position, setPosition] = useState(ethers.BigNumber.from("0"));
+  const [totalPosition, setTotalPosition] = useState(ethers.BigNumber.from("0"));
   const [feesEarned, setFeesEarned] = useState(ethers.BigNumber.from("0"));
 
   const dispatch = useAppDispatch();
@@ -56,11 +57,10 @@ const Pool: FC = () => {
         (datum) => datum.poolAddress === token.bridgePool
       );
 
-      console.log("in cond", upd, userPoolsData);
-
       if (upd) {
-        setPosition(ethers.BigNumber.from(upd.positionValue));
+        setPosition(ethers.BigNumber.from(upd.totalDeposited));
         setFeesEarned(ethers.BigNumber.from(upd.feesEarned));
+        setTotalPosition(ethers.BigNumber.from(upd.positionValue));
       }
     }
   }, [userPoolsData, connection.account, token.bridgePool]);
@@ -75,6 +75,7 @@ const Pool: FC = () => {
         apy={apy}
         position={position}
         feesEarned={feesEarned}
+        totalPosition={totalPosition}
       />
     </Layout>
   );
