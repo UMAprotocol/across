@@ -53,8 +53,10 @@ const Pool: FC = () => {
   useEffect(() => {
     if (connection.account && userPoolsData[connection.account]) {
       const upd = userPoolsData[connection.account].userPoolsData.find(
-        (datum) => datum.address === token.bridgePool
+        (datum) => datum.poolAddress === token.bridgePool
       );
+
+      console.log("in cond", upd, userPoolsData);
 
       if (upd) {
         setPosition(ethers.BigNumber.from(upd.positionValue));

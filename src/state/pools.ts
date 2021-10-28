@@ -28,7 +28,11 @@ export const getUserPoolState = createAsyncThunk(
       poolAddress
     )) as FetchUserPoolDataResponse;
     // The value we return becomes the `fulfilled` action payload
-    return response;
+
+    return {
+      pool: response.pool,
+      user: { ...response.user, poolAddress: response.pool.address },
+    };
   }
 );
 
@@ -67,6 +71,7 @@ export interface UserPoolData {
   positionValue: string;
   totalDeposited: string;
   feesEarned: string;
+  poolAddress: string;
 }
 
 interface UserData {

@@ -48,19 +48,19 @@ const PoolForm: FC<Props> = ({
           <PositionBlock>
             <PositionBlockItem>My position</PositionBlockItem>
             <PositionBlockItem>
-              {position.toString()} {symbol}
+              {ethers.utils.formatEther(position)} {symbol}
             </PositionBlockItem>
           </PositionBlock>
           <PositionBlock>
             <PositionBlockItem>Fees earned</PositionBlockItem>
             <PositionBlockItem>
-              {feesEarned.toString()} {symbol}
+              {ethers.utils.formatEther(feesEarned)} {symbol}
             </PositionBlockItem>
           </PositionBlock>
           <PositionBlock>
             <PositionBlockItemBold>Total</PositionBlockItemBold>
             <PositionBlockItemBold>
-              {position.add(feesEarned).toString()} {symbol}
+              {ethers.utils.formatEther(position.add(feesEarned))} {symbol}
             </PositionBlockItemBold>
           </PositionBlock>
         </PositionWrapper>

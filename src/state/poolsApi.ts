@@ -33,7 +33,8 @@ export async function fetchUserPoolData(account: string, poolAddress: string) {
       multicallTwoAddress
     );
     const res = await readClient.read(account);
-
+    // const modifiedUserData = { ...res.user, bridgeAddress: res.pool.address };
+    // return { ...res.pool, user: modifiedUserData };
     return res;
   } catch (err) {
     return err;
