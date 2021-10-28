@@ -22,11 +22,7 @@ interface Props {
 }
 
 const PoolSelection: FC<Props> = ({ setToken }) => {
-  const {
-    account,
-    // Temp comment out to clear warnings.
-    // isConnected
-  } = useConnection();
+  const { account, isConnected } = useConnection();
 
   const { data: balances } = useBalances(
     {
@@ -62,7 +58,7 @@ const PoolSelection: FC<Props> = ({ setToken }) => {
             <ToggleButton
               type="button"
               {...getToggleButtonProps()}
-              // disabled={!isConnected}
+              disabled={!isConnected}
             >
               <Logo src={selectedItem?.logoURI} alt={selectedItem?.name} />
               <div>{selectedItem?.symbol}</div>
