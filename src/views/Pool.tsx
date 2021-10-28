@@ -20,9 +20,11 @@ const Pool: FC = () => {
   const [feesEarned, setFeesEarned] = useState(ethers.BigNumber.from("0"));
 
   const dispatch = useAppDispatch();
-  const pools = useAppSelector((state) => state.pools.pools);
+  const pools = useAppSelector((state) => state.pools.pools[token.bridgePool]);
   const connection = useAppSelector((state) => state.connection);
-  const userPoolsData = useAppSelector((state) => state.pools.userData);
+  const userPoolsData = useAppSelector(
+    (state) => state.pools.userData[connection?.account || ""]
+  );
 
   const { isConnected } = useConnection();
 
@@ -32,11 +34,9 @@ const Pool: FC = () => {
   }, [dispatch, token]);
 
   useEffect(() => {
-    const currentPool = pools.find((p) => p.address === token.bridgePool);
-
-    if (currentPool) {
-      setTotalPoolSize(ethers.BigNumber.from(currentPool.totalPoolSize));
-      setApy(`${Number(currentPool.estimatedApy) * 100}%`);
+    if (pools) {
+      setTotalPoolSize(ethers.BigNumber.from(pools.totalPoolSize));
+      setApy(`${Number(pools.estimatedApy) * 100}%`);
     }
   }, [token, pools]);
 
@@ -52,8 +52,8 @@ const Pool: FC = () => {
   }, [isConnected, connection.account, token.bridgePool, dispatch]);
 
   useEffect(() => {
-    if (connection.account && userPoolsData[connection.account]) {
-      const upd = userPoolsData[connection.account].userPoolsData.find(
+    if (userPoolsData) {
+      const upd = userPoolsData.userPoolsData.find(
         (datum) => datum.poolAddress === token.bridgePool
       );
 

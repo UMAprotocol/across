@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { store } from "state";
-import { GlobalStyles, BlockPoller } from "components";
+import { GlobalStyles } from "components";
 
 import App from "./App";
 

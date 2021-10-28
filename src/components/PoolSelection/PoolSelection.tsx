@@ -36,8 +36,6 @@ const PoolSelection: FC<Props> = ({ setToken }) => {
     { skip: !account }
   );
 
-  console.log("poollist", POOL_LIST);
-
   const {
     isOpen,
     selectedItem,

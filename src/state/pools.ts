@@ -57,6 +57,10 @@ export interface Pool {
   totalPoolSize: string;
 }
 
+export interface Pools {
+  [address: string]: Pool;
+}
+
 //  user: {
 //    address: '0x9A8f92a830A5cB89a3816e3D267CB7791c16b04D',
 //    lpTokens: '900000000000000000',
@@ -81,13 +85,13 @@ interface UserData {
 }
 
 interface State {
-  pools: Pool[];
+  pools: Pools;
   userData: UserData;
   error?: Error;
 }
 
 const initialState: State = {
-  pools: [] as Pool[],
+  pools: {} as Pools,
   userData: {} as UserData,
   error: undefined,
 };
@@ -96,10 +100,10 @@ const poolsSlice = createSlice({
   name: "pools",
   initialState,
   reducers: {
-    pools: (state, action: PayloadAction<Pool[]>) => {
-      state.pools = action.payload;
-      return state;
-    },
+    // pools: (state, action: PayloadAction<Pools>) => {
+    //   state.pools = {...action.payload};
+    //   return state;
+    // },
     error: (state, action: PayloadAction<Pick<State, "error">>) => {
       state.error = action.payload.error;
       return state;
@@ -108,10 +112,11 @@ const poolsSlice = createSlice({
   extraReducers: (builder) =>
     builder
       .addCase(getPoolState.fulfilled, (state, action) => {
-        const nextState = state.pools.filter(
-          (x) => x.address !== action.payload.address
-        );
-        state.pools = [...nextState, action.payload];
+        // const nextState = state.pools.filter(
+        //   (x) => x.address !== action.payload.address
+        // );
+        // state.pools = [...nextState, action.payload];
+        state.pools[action.payload.address] = action.payload;
 
         return state;
       })
@@ -140,6 +145,6 @@ const poolsSlice = createSlice({
 
 const { actions, reducer } = poolsSlice;
 // Extract and export each action creator by name
-export const { pools, error } = actions;
+export const { error } = actions;
 // Export the reducer, either as a default or named export
 export default reducer;
