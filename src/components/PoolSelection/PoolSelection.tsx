@@ -36,6 +36,8 @@ const PoolSelection: FC<Props> = ({ setToken }) => {
     { skip: !account }
   );
 
+  console.log("poollist", POOL_LIST);
+
   const {
     isOpen,
     selectedItem,
@@ -79,8 +81,7 @@ const PoolSelection: FC<Props> = ({ setToken }) => {
                   <Logo src={token.logoURI} alt={token.name} />
                   <div>{token.name}</div>
                   <div>
-                    {balances &&
-                      formatUnits(balances[index], selectedItem!.decimals)}
+                    {balances && formatUnits(balances[index], token.decimals)}
                   </div>
                 </Item>
               ))}

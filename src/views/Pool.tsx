@@ -14,7 +14,9 @@ const Pool: FC = () => {
   );
   const [apy, setApy] = useState("0.00%");
   const [position, setPosition] = useState(ethers.BigNumber.from("0"));
-  const [totalPosition, setTotalPosition] = useState(ethers.BigNumber.from("0"));
+  const [totalPosition, setTotalPosition] = useState(
+    ethers.BigNumber.from("0")
+  );
   const [feesEarned, setFeesEarned] = useState(ethers.BigNumber.from("0"));
 
   const dispatch = useAppDispatch();
@@ -26,17 +28,15 @@ const Pool: FC = () => {
 
   // Get pool state on mount of view.
   useEffect(() => {
-    POOL_LIST.forEach((p) => dispatch(getPoolState(p.bridgePool)));
-  }, [dispatch]);
+    dispatch(getPoolState(token.bridgePool));
+  }, [dispatch, token]);
 
   useEffect(() => {
-    const pool = pools.find((p) => {
-      return p.address === token.bridgePool;
-    });
+    const currentPool = pools.find((p) => p.address === token.bridgePool);
 
-    if (pool) {
-      setTotalPoolSize(ethers.BigNumber.from(pool.totalPoolSize));
-      setApy(`${Number(pool.estimatedApy) * 100}%`);
+    if (currentPool) {
+      setTotalPoolSize(ethers.BigNumber.from(currentPool.totalPoolSize));
+      setApy(`${Number(currentPool.estimatedApy) * 100}%`);
     }
   }, [token, pools]);
 
@@ -71,6 +71,7 @@ const Pool: FC = () => {
       <PoolForm
         symbol={token.symbol}
         icon={token.logoURI}
+        decimals={token.decimals}
         totalPoolSize={totalPoolSize}
         apy={apy}
         position={position}

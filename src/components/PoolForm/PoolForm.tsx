@@ -21,6 +21,7 @@ import {
 interface Props {
   symbol: string;
   icon: string;
+  decimals: number;
   apy: string;
   totalPoolSize: ethers.BigNumber;
   totalPosition: ethers.BigNumber;
@@ -31,6 +32,7 @@ interface Props {
 const PoolForm: FC<Props> = ({
   symbol,
   icon,
+  decimals,
   totalPoolSize,
   totalPosition,
   apy,
@@ -48,28 +50,31 @@ const PoolForm: FC<Props> = ({
         <InfoText>{symbol} Pool</InfoText>
         <PositionWrapper>
           <PositionBlock>
-            <PositionBlockItem>My position</PositionBlockItem>
+            <PositionBlockItem>My deposit</PositionBlockItem>
             <PositionBlockItem>
-              {ethers.utils.formatEther(position)} {symbol}
+              {ethers.utils.formatUnits(position, decimals)} {symbol}
             </PositionBlockItem>
           </PositionBlock>
           <PositionBlock>
             <PositionBlockItem>Fees earned</PositionBlockItem>
             <PositionBlockItem>
-              {ethers.utils.formatEther(feesEarned)} {symbol}
+              {ethers.utils.formatUnits(feesEarned, decimals)}
+              {symbol}
             </PositionBlockItem>
           </PositionBlock>
           <PositionBlock>
             <PositionBlockItemBold>Total</PositionBlockItemBold>
             <PositionBlockItemBold>
-              {ethers.utils.formatEther(totalPosition)} {symbol}
+              {ethers.utils.formatUnits(totalPosition, decimals)}
+              {symbol}
             </PositionBlockItemBold>
           </PositionBlock>
         </PositionWrapper>
         <ROIWrapper>
           <ROIItem>Total Pool Size:</ROIItem>
           <ROIItem>
-            {ethers.utils.formatEther(totalPoolSize)} {symbol}
+            {ethers.utils.formatUnits(totalPoolSize, decimals)}
+            {symbol}
           </ROIItem>
         </ROIWrapper>
         <ROIWrapper>

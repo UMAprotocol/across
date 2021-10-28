@@ -83,16 +83,12 @@ interface UserData {
 interface State {
   pools: Pool[];
   userData: UserData;
-  status: Status;
   error?: Error;
 }
-
-type Status = "idle" | "loading";
 
 const initialState: State = {
   pools: [] as Pool[],
   userData: {} as UserData,
-  status: "idle",
   error: undefined,
 };
 
@@ -111,13 +107,7 @@ const poolsSlice = createSlice({
   },
   extraReducers: (builder) =>
     builder
-      .addCase(getPoolState.pending, (state, action) => {
-        state.status = "loading";
-
-        return state;
-      })
       .addCase(getPoolState.fulfilled, (state, action) => {
-        state.status = "idle";
         const nextState = state.pools.filter(
           (x) => x.address !== action.payload.address
         );
@@ -125,13 +115,7 @@ const poolsSlice = createSlice({
 
         return state;
       })
-      .addCase(getUserPoolState.pending, (state, action) => {
-        state.status = "loading";
-
-        return state;
-      })
       .addCase(getUserPoolState.fulfilled, (state, action) => {
-        state.status = "idle";
         const userAddress = action.payload.user.address;
 
         if (Object.keys(state.userData).length && state.userData[userAddress]) {
