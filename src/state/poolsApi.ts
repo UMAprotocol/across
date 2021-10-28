@@ -26,9 +26,6 @@ function getReadClient(
   return readClient;
 }
 export async function fetchPoolState(address: string) {
-  // return {};
-  // Comment out onreachable code for now
-
   try {
     const readClient = getReadClient(address);
     const res = await readClient.read();
