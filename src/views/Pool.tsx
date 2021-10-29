@@ -53,9 +53,7 @@ const Pool: FC = () => {
 
   useEffect(() => {
     if (userPoolsData) {
-      const upd = userPoolsData.userPoolsData.find(
-        (datum) => datum.poolAddress === token.bridgePool
-      );
+      const upd = userPoolsData.userPoolsData[token.bridgePool];
 
       if (upd) {
         setPosition(ethers.BigNumber.from(upd.totalDeposited));

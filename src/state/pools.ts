@@ -78,9 +78,13 @@ export interface UserPoolData {
   poolAddress: string;
 }
 
+export interface UserPoolsData {
+  [poolAddress: string]: UserPoolData;
+}
+
 interface UserData {
   [account: string]: {
-    userPoolsData: UserPoolData[];
+    userPoolsData: UserPoolsData;
   };
 }
 
@@ -126,19 +130,28 @@ const poolsSlice = createSlice({
         const userAddress = action.payload.user.address;
 
         if (Object.keys(state.userData).length && state.userData[userAddress]) {
-          const nextState = state.userData[userAddress].userPoolsData.filter(
-            (x) => x.address !== action.payload.pool.address
-          );
+          const nextState = {
+            ...state.userData[userAddress].userPoolsData,
+            [action.payload.pool.address]: action.payload.user,
+          };
 
-          state.userData[userAddress].userPoolsData = [
-            ...nextState,
-            action.payload.user,
-          ];
+          state.userData[userAddress].userPoolsData = nextState;
+        } else if (
+          Object.keys(state.userData).length &&
+          !state.userData[userAddress]
+        ) {
+          const nextState = {
+            userPoolsData: {
+              [action.payload.pool.address]: action.payload.user,
+            },
+          };
+          state.userData[userAddress] = nextState;
         } else {
-          const nextState = [];
-          nextState.push(action.payload.user);
-
-          state.userData[userAddress] = { userPoolsData: nextState };
+          state.userData[userAddress] = {
+            userPoolsData: {
+              [action.payload.pool.address]: action.payload.user,
+            },
+          };
         }
 
         return state;
