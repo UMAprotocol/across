@@ -65,5 +65,3 @@ const Pool: FC = () => {
   );
 };
 export default Pool;
-
-// const Wrapper = styled.
