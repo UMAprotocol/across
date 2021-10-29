@@ -93,6 +93,7 @@ const PoolForm: FC<Props> = ({
               setInputAmount(event.target.value)
             }
             bridgeAddress={bridgeAddress}
+            decimals={decimals}
           />
         </TabContentWrapper>
         <TabContentWrapper data-label="Remove">

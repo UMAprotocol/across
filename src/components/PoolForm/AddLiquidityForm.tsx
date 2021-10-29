@@ -13,11 +13,15 @@ import { poolClient } from "state/poolsApi";
 import { ethers } from "ethers";
 import { toWeiSafe } from "utils/weiMath";
 
+const toBN = ethers.BigNumber.from;
+const scaledToWei = toBN("10").pow("18");
+
 interface Props {
   error: Error | undefined;
   amount: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   bridgeAddress: string;
+  decimals: number;
 }
 
 const AddLiquidityForm: FC<Props> = ({ error, amount, onChange }) => {
@@ -29,11 +33,13 @@ const AddLiquidityForm: FC<Props> = ({ error, amount, onChange }) => {
       return init();
     }
     if (isConnected && Number(amount) > 0 && signer) {
+      const weiAmount = toWeiSafe(amount, decimals);
+
       try {
         const txId = await poolClient.addEthLiquidity(
           signer,
           bridgeAddress,
-          ethers.BigNumber.from(amount)
+          ethers.BigNumber.from(weiAmount)
         );
 
         const transaction = poolClient.getTx(txId);
