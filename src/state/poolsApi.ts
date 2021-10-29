@@ -23,7 +23,7 @@ export function poolEventHandler(path: string[], data: any) {
 
 const poolClient = new Client(
   {
-    multicallAddress: multicallTwoAddress,
+    multicall2Address: multicallTwoAddress,
   },
   {
     provider,
