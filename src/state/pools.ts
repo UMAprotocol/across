@@ -25,6 +25,7 @@ const poolsSlice = createSlice({
   initialState,
   reducers: {
     update: (state, action: PayloadAction<any>) => {
+      console.log("update called?", action.payload);
       const nextState = set(state, action.payload.path, action.payload.data);
       return nextState;
     },

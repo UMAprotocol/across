@@ -14,43 +14,72 @@ import { toWeiSafe } from "utils/weiMath";
 import { poolClient } from "state/poolsApi";
 
 const toBN = ethers.BigNumber.from;
-const scaledToWei = toBN("10").pow("18");
 
 interface Props {
   removeAmount: number;
   setRemoveAmount: Dispatch<SetStateAction<number>>;
   bridgeAddress: string;
-  position: ethers.BigNumber;
+  lpTokens: ethers.BigNumber;
   decimals: number;
+  symbol: string;
 }
-const RemoveLiqudityForm: FC<Props> = ({ removeAmount, setRemoveAmount }) => {
+const RemoveLiqudityForm: FC<Props> = ({
+  removeAmount,
+  setRemoveAmount,
+  bridgeAddress,
+  lpTokens,
+  decimals,
+  symbol,
+}) => {
   const { init } = onboard;
-  const { isConnected, provider } = useConnection();
+  const { isConnected, provider, signer, account } = useConnection();
 
   const handleButtonClick = async () => {
     if (!provider) {
       init();
     }
     if (isConnected && removeAmount > 0 && signer) {
+      const scaler = toBN("10").pow(decimals);
+
       const removeAmountToWei = toWeiSafe(
         (removeAmount / 100).toString(),
         decimals
       );
 
-      const weiAmount = position.mul(removeAmountToWei).div(scaledToWei);
+      const weiAmount = lpTokens.mul(removeAmountToWei).div(scaler);
 
       console.log("weiAmount", weiAmount, weiAmount.toString());
 
       try {
-        const txId = await poolClient.removeEthliquidity(
-          signer,
-          bridgeAddress,
-          weiAmount
-        );
+        let txId;
+        if (symbol === "ETH") {
+          txId = await poolClient.removeEthliquidity(
+            signer,
+            bridgeAddress,
+            weiAmount
+          );
+        } else {
+          txId = await poolClient.removeTokenLiquidity(
+            signer,
+            bridgeAddress,
+            weiAmount
+          );
+        }
 
         const transaction = poolClient.getTx(txId);
 
         console.log("txId", txId, "transaction", transaction);
+        if (transaction.hash) {
+          const { emitter } = notify.hash(transaction.hash);
+          // Scope to closure.
+          const acc = account;
+          emitter.on("txConfirmed", () => {
+            poolClient.updatePool(bridgeAddress);
+            if (acc) {
+              poolClient.updateUser(acc, bridgeAddress);
+            }
+          });
+        }
         return transaction;
       } catch (err) {
         console.log("err in RemoveLiquidity call", err);

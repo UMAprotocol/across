@@ -28,24 +28,28 @@ const Pool: FC = () => {
 
   const { isConnected } = useConnection();
 
-  // Get pool state on mount of view.
+  // Update pool info when token changes
   useEffect(() => {
     poolClient.updatePool(token.bridgePool);
   }, [token]);
 
-  useEffect(() => {
-    if (pool) {
-      setTotalPoolSize(ethers.BigNumber.from(pool.totalPoolSize || "0"));
-      setApy(`${Number(pool.estimatedApy || 0) * 100}%`);
-    }
-  }, [token, pool]);
+  // useEffect(() => {
+  //   if (pool) {
+  //     console.log("in this pool effect?");
+  //     setTotalPoolSize(ethers.BigNumber.from(pool.totalPoolSize || "0"));
+  //     setApy(`${Number(pool.estimatedApy || 0) * 100}%`);
+  //   }
+  // }, [token, pool]);
 
   useEffect(() => {
     if (isConnected && connection.account && token.bridgePool) {
+      console.log("in this user effect?");
+
       poolClient.updateUser(connection.account, token.bridgePool);
     }
   }, [isConnected, connection.account, token.bridgePool]);
 
+  // console.log("pool?", pool, "userPosition?", userPosition);
   return (
     <Layout>
       <PoolSelection setToken={setToken} />
@@ -53,13 +57,36 @@ const Pool: FC = () => {
         symbol={token.symbol}
         icon={token.logoURI}
         decimals={token.decimals}
-        totalPoolSize={totalPoolSize}
-        apy={apy}
-        position={ethers.BigNumber.from(userPosition?.totalDeposited || "0")}
-        feesEarned={ethers.BigNumber.from(userPosition?.feesEarned || "0")}
-        totalPosition={ethers.BigNumber.from(
-          userPosition?.positionValue || "0"
-        )}
+        totalPoolSize={
+          pool && pool.totalPoolSize
+            ? ethers.BigNumber.from(pool.totalPoolSize)
+            : ethers.BigNumber.from("0")
+        }
+        apy={
+          pool && pool.estimatedApy
+            ? `${Number(pool.estimatedApy) * 100}%`
+            : "0%"
+        }
+        position={
+          userPosition
+            ? ethers.BigNumber.from(userPosition.totalDeposited)
+            : ethers.BigNumber.from("0")
+        }
+        feesEarned={
+          userPosition
+            ? ethers.BigNumber.from(userPosition.feesEarned)
+            : ethers.BigNumber.from("0")
+        }
+        totalPosition={
+          userPosition
+            ? ethers.BigNumber.from(userPosition.positionValue)
+            : ethers.BigNumber.from("0")
+        }
+        lpTokens={
+          userPosition
+            ? ethers.BigNumber.from(userPosition.lpTokens)
+            : ethers.BigNumber.from("0")
+        }
         bridgeAddress={token.bridgePool}
       />
     </Layout>

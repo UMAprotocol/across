@@ -10,7 +10,6 @@ import {
   FormHeader,
 } from "./AddLiquidityForm.styles";
 import { poolClient } from "state/poolsApi";
-import { ethers } from "ethers";
 import { toWeiSafe } from "utils/weiMath";
 
 interface Props {
@@ -19,11 +18,19 @@ interface Props {
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   bridgeAddress: string;
   decimals: number;
+  symbol: string;
 }
 
-const AddLiquidityForm: FC<Props> = ({ error, amount, onChange }) => {
+const AddLiquidityForm: FC<Props> = ({
+  error,
+  amount,
+  onChange,
+  bridgeAddress,
+  decimals,
+  symbol,
+}) => {
   const { init } = onboard;
-  const { isConnected, provider } = useConnection();
+  const { isConnected, provider, signer, notify, account } = useConnection();
 
   const handleButtonClick = async () => {
     if (!provider) {
@@ -33,15 +40,36 @@ const AddLiquidityForm: FC<Props> = ({ error, amount, onChange }) => {
       const weiAmount = toWeiSafe(amount, decimals);
 
       try {
-        const txId = await poolClient.addEthLiquidity(
-          signer,
-          bridgeAddress,
-          ethers.BigNumber.from(weiAmount)
-        );
+        let txId;
+        if (symbol === "ETH") {
+          txId = await poolClient.addEthLiquidity(
+            signer,
+            bridgeAddress,
+            weiAmount
+          );
+        } else {
+          txId = await poolClient.addTokenLiquidity(
+            signer,
+            bridgeAddress,
+            weiAmount
+          );
+        }
 
         const transaction = poolClient.getTx(txId);
 
         console.log("txId", txId, "transaction", transaction);
+        if (transaction.hash) {
+          const { emitter } = notify.hash(transaction.hash);
+          // Scope to closure.
+          const acc = account;
+          emitter.on("txConfirmed", () => {
+            poolClient.updatePool(bridgeAddress);
+            if (acc) {
+              poolClient.updateUser(acc, bridgeAddress);
+            }
+          });
+        }
+
         return transaction;
       } catch (err) {
         console.log("err in AddEthLiqudity call", err);
