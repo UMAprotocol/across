@@ -9,6 +9,12 @@ import {
   switchChain,
 } from "utils";
 
+import { store } from "state";
+
+export function getStore() {
+  return store;
+}
+
 function App() {
   const { fromChain } = useSend();
   const { showConfirmationScreen } = useDeposits();
@@ -31,9 +37,11 @@ function App() {
       )}
       <Header />
       <Switch>
-        {process.env.HIDE_POOL ? (
+        {/* {process.env.HIDE_POOL ? (
           <Route exact path="/pool" component={Pool} />
-        ) : null}
+        ) : null} */}
+        <Route exact path="/pool" component={Pool} />
+
         <Route exact path="/about" component={About} />
         <Route
           exact

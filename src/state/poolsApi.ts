@@ -1,35 +1,43 @@
 import { ethers } from "ethers";
 import { multicallTwoAddress } from "utils";
 import * as umaSDK from "@uma/sdk";
-import { Pool, UserPoolData } from "./pools";
+import { Pool, UserPoolData, update } from "./pools";
+import { getStore } from "../App";
 
-const { ReadClient } = umaSDK.across.clients.bridgePool;
+const { Client } = umaSDK.across.clients.bridgePool;
 
 const provider = new ethers.providers.JsonRpcProvider(
   `https://mainnet.infura.io/v3/${process.env.REACT_APP_PUBLIC_INFURA_ID}`
 );
 
-// have to make a singleton per pool because this class is not stateless
-const readClients = new Map<
-  string,
-  umaSDK.across.clients.bridgePool.ReadClient
->();
-function getReadClient(
-  address: string
-): umaSDK.across.clients.bridgePool.ReadClient {
-  if (readClients.has(address))
-    return readClients.get(
-      address
-    ) as umaSDK.across.clients.bridgePool.ReadClient;
-  const readClient = new ReadClient(address, provider, multicallTwoAddress);
-  readClients.set(address, readClient);
-  return readClient;
+export function poolEventHandler(path: string[], data: any) {
+  return {};
+  // const store = getStore();
+  // return store.dispatch(
+  //   update({
+  //     payload: {
+  //       path,
+  //       data,
+  //     },
+  //   })
+  // );
 }
+
+const poolClient = new Client(
+  {
+    multicallAddress: multicallTwoAddress,
+  },
+  {
+    provider,
+  },
+  poolEventHandler
+);
+
 export async function fetchPoolState(address: string) {
   try {
-    const readClient = getReadClient(address);
-    const res = await readClient.read();
-    return res.pool;
+    await poolClient.updatePool(address);
+
+    return poolClient.getPool(address);
   } catch (err) {
     return err;
   }
@@ -42,11 +50,9 @@ export interface FetchUserPoolDataResponse {
 
 export async function fetchUserPoolData(account: string, poolAddress: string) {
   try {
-    const readClient = getReadClient(poolAddress);
-    const res = await readClient.read(account);
-    // const modifiedUserData = { ...res.user, bridgeAddress: res.pool.address };
-    // return { ...res.pool, user: modifiedUserData };
-    return res;
+    await poolClient.updateUser(account, poolAddress);
+
+    return poolClient.getUser(account, poolAddress);
   } catch (err) {
     return err;
   }

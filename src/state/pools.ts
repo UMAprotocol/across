@@ -104,10 +104,11 @@ const poolsSlice = createSlice({
   name: "pools",
   initialState,
   reducers: {
-    // pools: (state, action: PayloadAction<Pools>) => {
-    //   state.pools = {...action.payload};
-    //   return state;
-    // },
+    update: (state, action: PayloadAction<any>) => {
+      console.log("action.payload", action.payload);
+      // state.pools = { ...action.payload };
+      return state;
+    },
     error: (state, action: PayloadAction<Pick<State, "error">>) => {
       state.error = action.payload.error;
       return state;
@@ -160,6 +161,6 @@ const poolsSlice = createSlice({
 
 const { actions, reducer } = poolsSlice;
 // Extract and export each action creator by name
-export const { error } = actions;
+export const { update, error } = actions;
 // Export the reducer, either as a default or named export
 export default reducer;
