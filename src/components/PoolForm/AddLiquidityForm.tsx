@@ -13,9 +13,6 @@ import { poolClient } from "state/poolsApi";
 import { ethers } from "ethers";
 import { toWeiSafe } from "utils/weiMath";
 
-const toBN = ethers.BigNumber.from;
-const scaledToWei = toBN("10").pow("18");
-
 interface Props {
   error: Error | undefined;
   amount: string;
@@ -51,6 +48,7 @@ const AddLiquidityForm: FC<Props> = ({ error, amount, onChange }) => {
       }
     }
   };
+
   return (
     <>
       <FormHeader>Amount</FormHeader>

@@ -101,6 +101,8 @@ const PoolForm: FC<Props> = ({
             removeAmount={removeAmount}
             setRemoveAmount={setRemoveAmount}
             bridgeAddress={bridgeAddress}
+            position={position}
+            decimals={decimals}
           />
         </TabContentWrapper>
       </Tabs>
