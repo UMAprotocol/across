@@ -37,10 +37,9 @@ function App() {
       )}
       <Header />
       <Switch>
-        {/* {process.env.HIDE_POOL ? (
+        {!process.env.HIDE_POOL ? (
           <Route exact path="/pool" component={Pool} />
-        ) : null} */}
-        <Route exact path="/pool" component={Pool} />
+        ) : null}
 
         <Route exact path="/about" component={About} />
         <Route
