@@ -13,6 +13,7 @@ import {
 interface Props {
   removeAmount: number;
   setRemoveAmount: Dispatch<SetStateAction<number>>;
+  bridgeAddress: string;
 }
 const RemoveLiqudityForm: FC<Props> = ({ removeAmount, setRemoveAmount }) => {
   const { init } = onboard;

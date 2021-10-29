@@ -9,20 +9,40 @@ import {
   InputGroup,
   FormHeader,
 } from "./AddLiquidityForm.styles";
+import { poolClient } from "state/poolsApi";
+import { ethers } from "ethers";
+import { toWeiSafe } from "utils/weiMath";
 
 interface Props {
   error: Error | undefined;
   amount: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  bridgeAddress: string;
 }
 
 const AddLiquidityForm: FC<Props> = ({ error, amount, onChange }) => {
   const { init } = onboard;
   const { isConnected, provider } = useConnection();
 
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     if (!provider) {
-      init();
+      return init();
+    }
+    if (isConnected && Number(amount) > 0 && signer) {
+      try {
+        const txId = await poolClient.addEthLiquidity(
+          signer,
+          bridgeAddress,
+          ethers.BigNumber.from(amount)
+        );
+
+        const transaction = poolClient.getTx(txId);
+
+        console.log("txId", txId, "transaction", transaction);
+        return transaction;
+      } catch (err) {
+        console.log("err in AddEthLiqudity call", err);
+      }
     }
   };
   return (

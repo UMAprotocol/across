@@ -60,6 +60,7 @@ const Pool: FC = () => {
         totalPosition={ethers.BigNumber.from(
           userPosition?.positionValue || "0"
         )}
+        bridgeAddress={token.bridgePool}
       />
     </Layout>
   );
