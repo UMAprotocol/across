@@ -6,6 +6,7 @@ import PoolForm from "components/PoolForm";
 import { POOL_LIST, Token } from "utils";
 import { useAppDispatch, useAppSelector, useConnection } from "state/hooks";
 import { getPoolState, getUserPoolState } from "state/pools";
+import get from 'lodash/get'
 
 const Pool: FC = () => {
   const [token, setToken] = useState<Token>(POOL_LIST[0]);
@@ -13,17 +14,12 @@ const Pool: FC = () => {
     ethers.BigNumber.from("0")
   );
   const [apy, setApy] = useState("0.00%");
-  const [position, setPosition] = useState(ethers.BigNumber.from("0"));
-  const [totalPosition, setTotalPosition] = useState(
-    ethers.BigNumber.from("0")
-  );
-  const [feesEarned, setFeesEarned] = useState(ethers.BigNumber.from("0"));
 
   const dispatch = useAppDispatch();
   const pools = useAppSelector((state) => state.pools.pools[token.bridgePool]);
   const connection = useAppSelector((state) => state.connection);
-  const userPoolsData = useAppSelector(
-    (state) => state.pools.userData[connection?.account || ""]
+  const userPosition = useAppSelector(
+    (state) => get(state,['pools','userData',state?.connection?.account || '','userPoolsData',token.bridgePool])
   );
 
   const { isConnected } = useConnection();
@@ -51,18 +47,6 @@ const Pool: FC = () => {
     }
   }, [isConnected, connection.account, token.bridgePool, dispatch]);
 
-  useEffect(() => {
-    if (userPoolsData) {
-      const upd = userPoolsData.userPoolsData[token.bridgePool];
-
-      if (upd) {
-        setPosition(ethers.BigNumber.from(upd.totalDeposited));
-        setFeesEarned(ethers.BigNumber.from(upd.feesEarned));
-        setTotalPosition(ethers.BigNumber.from(upd.positionValue));
-      }
-    }
-  }, [userPoolsData, connection.account, token.bridgePool]);
-
   return (
     <Layout>
       <PoolSelection setToken={setToken} />
@@ -72,9 +56,9 @@ const Pool: FC = () => {
         decimals={token.decimals}
         totalPoolSize={totalPoolSize}
         apy={apy}
-        position={position}
-        feesEarned={feesEarned}
-        totalPosition={totalPosition}
+        position={ethers.BigNumber.from(userPosition?.totalDeposited || '0' )}
+        feesEarned={ethers.BigNumber.from(userPosition?.feesEarned || '0')}
+        totalPosition={ethers.BigNumber.from(userPosition?.positionValue || '0')}
       />
     </Layout>
   );
