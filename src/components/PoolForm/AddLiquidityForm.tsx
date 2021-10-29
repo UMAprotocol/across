@@ -1,4 +1,4 @@
-import { FC, ChangeEvent } from "react";
+import { FC, ChangeEvent, useState, useCallback, useEffect } from "react";
 import { onboard } from "utils";
 import { useConnection } from "state/hooks";
 import {
@@ -11,6 +11,13 @@ import {
 } from "./AddLiquidityForm.styles";
 import { poolClient } from "state/poolsApi";
 import { toWeiSafe } from "utils/weiMath";
+import { useERC20 } from "hooks";
+import { ethers } from "ethers";
+import { clients } from "@uma/sdk";
+
+// max uint value is 2^256 - 1
+const MAX_UINT_VAL = ethers.constants.MaxUint256;
+const INFINITE_APPROVAL_AMOUNT = MAX_UINT_VAL;
 
 interface Props {
   error: Error | undefined;
@@ -19,6 +26,7 @@ interface Props {
   bridgeAddress: string;
   decimals: number;
   symbol: string;
+  tokenAddress: string;
 }
 
 const AddLiquidityForm: FC<Props> = ({
@@ -28,14 +36,56 @@ const AddLiquidityForm: FC<Props> = ({
   bridgeAddress,
   decimals,
   symbol,
+  tokenAddress,
 }) => {
   const { init } = onboard;
   const { isConnected, provider, signer, notify, account } = useConnection();
+  const { approve } = useERC20(tokenAddress);
+
+  const [userNeedsToApprove, setUserNeedsToApprove] = useState(false);
+
+  const checkIfUserHasToApprove = useCallback(async () => {
+    if (signer && account) {
+      try {
+        const token = clients.erc20.connect(tokenAddress, signer);
+        const allowance = await token.allowance(account, bridgeAddress);
+
+        const balance = await token.balanceOf(account);
+
+        const hasToApprove = allowance.lt(balance);
+        if (hasToApprove) {
+          setUserNeedsToApprove(true);
+        }
+      } catch (err) {
+        console.log("err in check approval call", err);
+      }
+    }
+  }, [account, tokenAddress, bridgeAddress, signer]);
+
+  useEffect(() => {
+    if (isConnected && symbol !== "ETH") checkIfUserHasToApprove();
+  }, [isConnected, symbol, checkIfUserHasToApprove]);
+
+  const handleApprove = async () => {
+    const tx = await approve({
+      amount: INFINITE_APPROVAL_AMOUNT,
+      spender: bridgeAddress,
+      signer,
+    });
+
+    if (tx) {
+      const { emitter } = notify.hash(tx.hash);
+      emitter.on("txConfirmed", () => {
+        setUserNeedsToApprove(false);
+      });
+    }
+  };
 
   const handleButtonClick = async () => {
     if (!provider) {
       return init();
     }
+    if (isConnected && userNeedsToApprove) return handleApprove();
     if (isConnected && Number(amount) > 0 && signer) {
       const weiAmount = toWeiSafe(amount, decimals);
 
@@ -108,7 +158,11 @@ const AddLiquidityForm: FC<Props> = ({
         </RoundBox>
       </InputGroup>
       <FormButton onClick={handleButtonClick}>
-        {!isConnected ? "Connect wallet" : "Add liquidity"}
+        {!isConnected
+          ? "Connect wallet"
+          : userNeedsToApprove
+          ? "Approve"
+          : "Add liquidity"}
       </FormButton>
     </>
   );

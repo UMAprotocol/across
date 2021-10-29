@@ -29,6 +29,7 @@ interface Props {
   feesEarned: ethers.BigNumber;
   bridgeAddress: string;
   lpTokens: ethers.BigNumber;
+  tokenAddress: string;
 }
 
 const PoolForm: FC<Props> = ({
@@ -42,6 +43,7 @@ const PoolForm: FC<Props> = ({
   feesEarned,
   bridgeAddress,
   lpTokens,
+  tokenAddress,
 }) => {
   const [inputAmount, setInputAmount] = useState("");
   const [removeAmount, setRemoveAmount] = useState(0);
@@ -97,6 +99,7 @@ const PoolForm: FC<Props> = ({
             bridgeAddress={bridgeAddress}
             decimals={decimals}
             symbol={symbol}
+            tokenAddress={tokenAddress}
           />
         </TabContentWrapper>
         <TabContentWrapper data-label="Remove">

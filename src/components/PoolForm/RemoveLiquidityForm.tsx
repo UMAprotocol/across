@@ -32,7 +32,7 @@ const RemoveLiqudityForm: FC<Props> = ({
   symbol,
 }) => {
   const { init } = onboard;
-  const { isConnected, provider, signer, account } = useConnection();
+  const { isConnected, provider, signer, account, notify } = useConnection();
 
   const handleButtonClick = async () => {
     if (!provider) {

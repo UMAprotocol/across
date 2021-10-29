@@ -57,6 +57,7 @@ const Pool: FC = () => {
         symbol={token.symbol}
         icon={token.logoURI}
         decimals={token.decimals}
+        tokenAddress={token.address}
         totalPoolSize={
           pool && pool.totalPoolSize
             ? ethers.BigNumber.from(pool.totalPoolSize)
