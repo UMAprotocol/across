@@ -40,7 +40,6 @@ export function useConnection() {
   );
 
   const isConnected = !!chainId && !!signer && !!account;
-
   return {
     account,
     chainId,
@@ -181,7 +180,6 @@ export function useSend() {
       );
       return tx;
     } catch (e) {
-      console.error(e);
       throw new TransactionError(
         depositBox.address,
         "deposit",

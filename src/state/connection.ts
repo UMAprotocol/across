@@ -36,7 +36,6 @@ const connectionSlice = createSlice({
       if (chainId) {
         if (isSupportedChainId(chainId)) {
           state.chainId = chainId;
-          // Clear the error if the chainId is correctly set
           if (state.error instanceof UnsupportedChainIdError) {
             state.error = undefined;
           }

@@ -8,6 +8,7 @@ import {store} from 'state'
 
 export type Emit = (event:string, data?:any) => void
 export function OnboardReact(config:Initialization, emit:Emit){
+  let savedWallet:Wallet | undefined 
   const onboard = Onboard({
     ...config,
     subscriptions: {
@@ -19,10 +20,25 @@ export function OnboardReact(config:Initialization, emit:Emit){
           return;
         }
         const chainId = ethers.BigNumber.from(chainIdInHex).toNumber();
+        // need to make new provider on chain change
+        if(savedWallet?.provider){
+          const provider = new ethers.providers.Web3Provider(savedWallet.provider);
+          const signer = provider.getSigner();
+          emit('update',{ 
+            chainId ,
+            provider,
+            signer
+          });
+        }else{
+          emit('update',{ 
+            chainId 
+          });
+        }
 
-        emit('update',{ chainId });
       },
       wallet: (wallet: Wallet) => {
+        if(!wallet.provider) return
+        savedWallet = wallet
         const provider = new ethers.providers.Web3Provider(wallet.provider);
         const signer = provider.getSigner();
         emit('update',{
@@ -50,7 +66,9 @@ export function OnboardReact(config:Initialization, emit:Emit){
       emit('error',err)
     }
   }
-  return { init, reset, onboard };
+  return { 
+    init, reset, onboard,
+  }
 }
 export const onboard = OnboardReact(onboardBaseConfig(),(event,data)=>{
   if(event === 'update'){
