@@ -1,6 +1,6 @@
 import { FC, Dispatch, SetStateAction } from "react";
 import PoolFormSlider from "./PoolFormSlider";
-import { onboard } from "hooks";
+import { onboard } from "utils";
 import { useConnection } from "state/hooks";
 import {
   RemoveAmount,

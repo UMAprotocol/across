@@ -1,4 +1,4 @@
-import { onboard } from "hooks";
+import { onboard } from "utils";
 import React from "react";
 import { useConnection, useETHBalance } from "state/hooks";
 import {

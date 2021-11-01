@@ -1,5 +1,5 @@
 import React from "react";
-import { onboard } from "hooks";
+import { onboard } from "utils";
 import { useConnection, useSend } from "state/hooks";
 import { CHAINS, switchChain } from "utils";
 import { Section, SectionTitle } from "../Section";

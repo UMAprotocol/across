@@ -1,5 +1,5 @@
 import { FC, ChangeEvent } from "react";
-import { onboard } from "hooks";
+import { onboard } from "utils";
 import { useConnection } from "state/hooks";
 import {
   RoundBox,

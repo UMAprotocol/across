@@ -7,7 +7,8 @@ import { update,disconnect,error } from "state/connection";
 import {store} from 'state'
 
 export type Emit = (event:string, data?:any) => void
-export function OnboardReact(config:Initialization, emit:Emit){
+type Update = {account?:string , provider?:ethers.providers.Web3Provider, chainId?:string, signer?:ethers.Signer}
+export function OnboardEthers(config:Initialization, emit:Emit){
   let savedWallet:Wallet | undefined 
   const onboard = Onboard({
     ...config,
@@ -22,6 +23,8 @@ export function OnboardReact(config:Initialization, emit:Emit){
         const chainId = ethers.BigNumber.from(chainIdInHex).toNumber();
         // need to make new provider on chain change
         if(savedWallet?.provider){
+          // when chain change will always follow first wallet connect or chain change, so we can emit 
+          // signer and provider here, so it only happens once.
           const provider = new ethers.providers.Web3Provider(savedWallet.provider);
           const signer = provider.getSigner();
           emit('update',{ 
@@ -37,15 +40,12 @@ export function OnboardReact(config:Initialization, emit:Emit){
 
       },
       wallet: (wallet: Wallet) => {
-        if(!wallet.provider) return
+        const update:Update = {}
         savedWallet = wallet
-        const provider = new ethers.providers.Web3Provider(wallet.provider);
-        const signer = provider.getSigner();
-        emit('update',{
-          account: wallet.provider.selectedAddress,
-          provider,
-          signer,
-        });
+        if(wallet.provider){
+          update.account = wallet.provider.selectedAddress
+        }
+        emit('update',update);
       },
     },
   })
@@ -70,7 +70,7 @@ export function OnboardReact(config:Initialization, emit:Emit){
     init, reset, onboard,
   }
 }
-export const onboard = OnboardReact(onboardBaseConfig(),(event,data)=>{
+export const onboard = OnboardEthers(onboardBaseConfig(),(event,data)=>{
   if(event === 'update'){
     store.dispatch(update(data))
   }
