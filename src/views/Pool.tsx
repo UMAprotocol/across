@@ -8,13 +8,15 @@ import { POOL_LIST, Token } from "utils";
 import { useAppSelector, useConnection } from "state/hooks";
 import get from "lodash/get";
 import { poolClient } from "state/poolsApi";
-import { useBalances, useETHBalance } from "state/chainApi";
+import createERC20ContractInstance from "utils/createERC20Instance";
 
 const Pool: FC = () => {
   const [token, setToken] = useState<Token>(POOL_LIST[0]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [depositUrl, setDepositUrl] = useState("");
-
+  const [currentERC20Contract, setCurrentERC20Contract] =
+    useState<ethers.Contract | null>(null);
+  const [balance, setBalance] = useState(ethers.BigNumber.from("0"));
   const pool = useAppSelector((state) => state.pools.pools[token.bridgePool]);
   const connection = useAppSelector((state) => state.connection);
   const userPosition = useAppSelector((state) =>
@@ -26,7 +28,7 @@ const Pool: FC = () => {
     ])
   );
 
-  const { isConnected, account } = useConnection();
+  const { isConnected, account, signer, provider } = useConnection();
 
   const queries = useAppSelector(
     (state) => state.api.queries
@@ -43,6 +45,23 @@ const Pool: FC = () => {
       poolClient.updateUser(connection.account, token.bridgePool);
     }
   }, [isConnected, connection.account, token.bridgePool]);
+
+  useEffect(() => {
+    if (isConnected && signer && account && provider) {
+      if (token.symbol !== "ETH") {
+        const erc20 = createERC20ContractInstance(signer, token.address);
+        setCurrentERC20Contract(erc20);
+        erc20.balanceOf(connection.account).then((res: ethers.BigNumber) => {
+          setBalance(res);
+        });
+      } else {
+        setCurrentERC20Contract(null);
+        provider.getBalance(account).then((res: ethers.BigNumber) => {
+          setBalance(res);
+        });
+      }
+    }
+  }, [token, isConnected, signer, account, provider]);
 
   return (
     <Layout>
@@ -98,6 +117,8 @@ const Pool: FC = () => {
             }
             setShowSuccess={setShowSuccess}
             setDepositUrl={setDepositUrl}
+            // currentERC20Contract={currentERC20Contract}
+            balance={balance}
           />
         </>
       ) : (

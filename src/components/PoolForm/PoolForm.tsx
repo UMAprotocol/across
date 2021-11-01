@@ -35,6 +35,7 @@ interface Props {
   erc20Balances: QuerySubState<any> | null | undefined;
   setShowSuccess: React.Dispatch<React.SetStateAction<boolean>>;
   setDepositUrl: React.Dispatch<React.SetStateAction<string>>;
+  balance: ethers.BigNumber;
 }
 
 const PoolForm: FC<Props> = ({
@@ -53,7 +54,10 @@ const PoolForm: FC<Props> = ({
   erc20Balances,
   setShowSuccess,
   setDepositUrl,
+  balance,
 }) => {
+  console.log("balance", balance.toString());
+
   const [inputAmount, setInputAmount] = useState("");
   const [removeAmount, setRemoveAmount] = useState(0);
   const [error] = useState<Error>();
