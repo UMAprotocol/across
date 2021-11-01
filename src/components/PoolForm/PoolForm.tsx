@@ -117,6 +117,7 @@ const PoolForm: FC<Props> = ({
             tokenAddress={tokenAddress}
             setShowSuccess={setShowSuccess}
             setDepositUrl={setDepositUrl}
+            balance={balance}
           />
         </TabContentWrapper>
         <TabContentWrapper data-label="Remove">
@@ -129,6 +130,7 @@ const PoolForm: FC<Props> = ({
             symbol={symbol}
             setShowSuccess={setShowSuccess}
             setDepositUrl={setDepositUrl}
+            balance={balance}
           />
         </TabContentWrapper>
       </Tabs>

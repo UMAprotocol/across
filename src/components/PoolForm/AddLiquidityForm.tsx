@@ -8,6 +8,7 @@ import {
   FormButton,
   InputGroup,
   FormHeader,
+  Balance,
 } from "./AddLiquidityForm.styles";
 import { poolClient } from "state/poolsApi";
 import { toWeiSafe } from "utils/weiMath";
@@ -30,6 +31,7 @@ interface Props {
   tokenAddress: string;
   setShowSuccess: React.Dispatch<React.SetStateAction<boolean>>;
   setDepositUrl: React.Dispatch<React.SetStateAction<string>>;
+  balance: ethers.BigNumber;
 }
 
 const AddLiquidityForm: FC<Props> = ({
@@ -42,6 +44,7 @@ const AddLiquidityForm: FC<Props> = ({
   tokenAddress,
   setShowSuccess,
   setDepositUrl,
+  balance,
 }) => {
   const { init } = onboard;
   const { isConnected, provider, signer, notify, account } = useConnection();
@@ -169,6 +172,11 @@ const AddLiquidityForm: FC<Props> = ({
           />
         </RoundBox>
       </InputGroup>
+      <Balance>
+        <span>
+          Balance: {ethers.utils.formatUnits(balance, decimals)} {symbol}
+        </span>
+      </Balance>
       <FormButton onClick={handleButtonClick}>
         {!isConnected
           ? "Connect wallet"

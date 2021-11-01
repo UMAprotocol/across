@@ -8,6 +8,7 @@ import {
   RemovePercentButton,
   RemoveFormButton,
   RemoveFormButtonWrapper,
+  Balance,
 } from "./RemoveLiquidityForm.styles";
 import { ethers } from "ethers";
 import { toWeiSafe } from "utils/weiMath";
@@ -25,6 +26,7 @@ interface Props {
   symbol: string;
   setShowSuccess: React.Dispatch<React.SetStateAction<boolean>>;
   setDepositUrl: React.Dispatch<React.SetStateAction<string>>;
+  balance: ethers.BigNumber;
 }
 const RemoveLiqudityForm: FC<Props> = ({
   removeAmount,
@@ -35,6 +37,7 @@ const RemoveLiqudityForm: FC<Props> = ({
   symbol,
   setShowSuccess,
   setDepositUrl,
+  balance,
 }) => {
   const { init } = onboard;
   const { isConnected, provider, signer, account, notify } = useConnection();
@@ -117,6 +120,11 @@ const RemoveLiqudityForm: FC<Props> = ({
           Max
         </RemovePercentButton>
       </RemovePercentButtonsWrapper>
+      <Balance>
+        <span>
+          Balance: {ethers.utils.formatUnits(balance, decimals)} {symbol}
+        </span>
+      </Balance>
       <RemoveFormButtonWrapper>
         <RemoveFormButton onClick={handleButtonClick}>
           {!isConnected ? "Connect wallet" : "Remove liquidity"}

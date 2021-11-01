@@ -14,8 +14,7 @@ const Pool: FC = () => {
   const [token, setToken] = useState<Token>(POOL_LIST[0]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [depositUrl, setDepositUrl] = useState("");
-  const [currentERC20Contract, setCurrentERC20Contract] =
-    useState<ethers.Contract | null>(null);
+
   const [balance, setBalance] = useState(ethers.BigNumber.from("0"));
   const pool = useAppSelector((state) => state.pools.pools[token.bridgePool]);
   const connection = useAppSelector((state) => state.connection);
@@ -50,12 +49,10 @@ const Pool: FC = () => {
     if (isConnected && signer && account && provider) {
       if (token.symbol !== "ETH") {
         const erc20 = createERC20ContractInstance(signer, token.address);
-        setCurrentERC20Contract(erc20);
-        erc20.balanceOf(connection.account).then((res: ethers.BigNumber) => {
+        erc20.balanceOf(account).then((res: ethers.BigNumber) => {
           setBalance(res);
         });
       } else {
-        setCurrentERC20Contract(null);
         provider.getBalance(account).then((res: ethers.BigNumber) => {
           setBalance(res);
         });
