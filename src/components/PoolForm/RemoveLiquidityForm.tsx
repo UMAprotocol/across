@@ -22,6 +22,7 @@ interface Props {
   lpTokens: ethers.BigNumber;
   decimals: number;
   symbol: string;
+  setShowSuccess: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const RemoveLiqudityForm: FC<Props> = ({
   removeAmount,
@@ -30,6 +31,7 @@ const RemoveLiqudityForm: FC<Props> = ({
   lpTokens,
   decimals,
   symbol,
+  setShowSuccess,
 }) => {
   const { init } = onboard;
   const { isConnected, provider, signer, account, notify } = useConnection();

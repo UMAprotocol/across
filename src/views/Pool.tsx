@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import Layout from "components/Layout";
 import PoolSelection from "components/PoolSelection";
 import PoolForm from "components/PoolForm";
+import DepositSuccess from "components/PoolForm/DepositSuccess";
 import { POOL_LIST, Token } from "utils";
 import { useAppSelector, useConnection } from "state/hooks";
 import get from "lodash/get";
@@ -11,6 +12,8 @@ import { useBalances, useETHBalance } from "state/chainApi";
 
 const Pool: FC = () => {
   const [token, setToken] = useState<Token>(POOL_LIST[0]);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [depositUrl, setDepositUrl] = useState("");
 
   const pool = useAppSelector((state) => state.pools.pools[token.bridgePool]);
   const connection = useAppSelector((state) => state.connection);
@@ -43,55 +46,65 @@ const Pool: FC = () => {
 
   return (
     <Layout>
-      <PoolSelection setToken={setToken} />
-      <PoolForm
-        symbol={token.symbol}
-        icon={token.logoURI}
-        decimals={token.decimals}
-        tokenAddress={token.address}
-        totalPoolSize={
-          pool && pool.totalPoolSize
-            ? ethers.BigNumber.from(pool.totalPoolSize)
-            : ethers.BigNumber.from("0")
-        }
-        apy={
-          pool && pool.estimatedApy
-            ? `${Number(pool.estimatedApy) * 100}%`
-            : "0%"
-        }
-        position={
-          userPosition
-            ? ethers.BigNumber.from(userPosition.totalDeposited)
-            : ethers.BigNumber.from("0")
-        }
-        feesEarned={
-          userPosition
-            ? ethers.BigNumber.from(userPosition.feesEarned)
-            : ethers.BigNumber.from("0")
-        }
-        totalPosition={
-          userPosition
-            ? ethers.BigNumber.from(userPosition.positionValue)
-            : ethers.BigNumber.from("0")
-        }
-        lpTokens={
-          userPosition
-            ? ethers.BigNumber.from(userPosition.lpTokens)
-            : ethers.BigNumber.from("0")
-        }
-        bridgeAddress={token.bridgePool}
-        ethBalance={
-          account
-            ? // Very odd key assigned to these values.
-              queries[`ethBalance({"account":"${account}","chainId":1})`]
-            : null
-        }
-        erc20Balances={
-          account
-            ? queries[`balances({"account":"${account}","chainId":1})`]
-            : null
-        }
-      />
+      {!showSuccess ? (
+        <>
+          <PoolSelection setToken={setToken} />
+          <PoolForm
+            symbol={token.symbol}
+            icon={token.logoURI}
+            decimals={token.decimals}
+            tokenAddress={token.address}
+            totalPoolSize={
+              pool && pool.totalPoolSize
+                ? ethers.BigNumber.from(pool.totalPoolSize)
+                : ethers.BigNumber.from("0")
+            }
+            apy={
+              pool && pool.estimatedApy
+                ? `${Number(pool.estimatedApy) * 100}%`
+                : "0%"
+            }
+            position={
+              userPosition
+                ? ethers.BigNumber.from(userPosition.totalDeposited)
+                : ethers.BigNumber.from("0")
+            }
+            feesEarned={
+              userPosition
+                ? ethers.BigNumber.from(userPosition.feesEarned)
+                : ethers.BigNumber.from("0")
+            }
+            totalPosition={
+              userPosition
+                ? ethers.BigNumber.from(userPosition.positionValue)
+                : ethers.BigNumber.from("0")
+            }
+            lpTokens={
+              userPosition
+                ? ethers.BigNumber.from(userPosition.lpTokens)
+                : ethers.BigNumber.from("0")
+            }
+            bridgeAddress={token.bridgePool}
+            ethBalance={
+              account
+                ? // Very odd key assigned to these values.
+                  queries[`ethBalance({"account":"${account}","chainId":1})`]
+                : null
+            }
+            erc20Balances={
+              account
+                ? queries[`balances({"account":"${account}","chainId":1})`]
+                : null
+            }
+            setShowSuccess={setShowSuccess}
+          />
+        </>
+      ) : (
+        <DepositSuccess
+          depositUrl={depositUrl}
+          setShowSuccess={setShowSuccess}
+        />
+      )}
     </Layout>
   );
 };

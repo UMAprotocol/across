@@ -27,6 +27,7 @@ interface Props {
   decimals: number;
   symbol: string;
   tokenAddress: string;
+  setShowSuccess: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AddLiquidityForm: FC<Props> = ({
@@ -37,6 +38,7 @@ const AddLiquidityForm: FC<Props> = ({
   decimals,
   symbol,
   tokenAddress,
+  setShowSuccess,
 }) => {
   const { init } = onboard;
   const { isConnected, provider, signer, notify, account } = useConnection();
