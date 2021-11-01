@@ -14,22 +14,22 @@ const BouncingDotsLoader: FC<Props> = () => {
 };
 
 const BouncingWrapper = styled.div`
-  display: flex;
-  justify-content: center;
+  display: inline-flex;
+  margin-left: 4px;
 
   > div {
-    width: 16px;
-    height: 16px;
-    margin: 3px 6px;
+    width: 6px;
+    height: 6px;
+    margin: 2px 4px;
     border-radius: 50%;
-    background-color: #a3a1a1;
+    background-color: hsla(230, 6%, 19%, 1);
     opacity: 1;
     animation: bouncing-loader 0.6s infinite alternate;
   }
 
   @keyframes bouncing-loader {
     to {
-      transform: translateY(-16px);
+      transform: translateY(-8px);
     }
   }
 

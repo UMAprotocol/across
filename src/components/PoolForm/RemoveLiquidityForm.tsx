@@ -76,7 +76,6 @@ const RemoveLiqudityForm: FC<Props> = ({
 
         const transaction = poolClient.getTx(txId);
 
-        console.log("txId", txId, "transaction", transaction);
         if (transaction.hash) {
           const { emitter } = notify.hash(transaction.hash);
           emitter.on("all", addEtherscan);

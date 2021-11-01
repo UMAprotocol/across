@@ -125,7 +125,6 @@ const AddLiquidityForm: FC<Props> = ({
 
         const transaction = poolClient.getTx(txId);
 
-        console.log("txId", txId, "transaction", transaction);
         if (transaction.hash) {
           setTxSubmitted(true);
 
@@ -136,7 +135,6 @@ const AddLiquidityForm: FC<Props> = ({
           emitter.on("txConfirmed", (tx: any) => {
             setTxSubmitted(false);
             setShowSuccess(true);
-            console.log("tx", tx);
             const url = `https://etherscan.io/tx/${transaction.hash}`;
             setDepositUrl(url);
             setTimeout(() => {
