@@ -110,16 +110,16 @@ const AddLiquidityForm: FC<Props> = ({
         console.log("txId", txId, "transaction", transaction);
         if (transaction.hash) {
           const { emitter } = notify.hash(transaction.hash);
-          // Scope to closure.
-          const acc = account;
-          emitter.on("txConfirmed", () => {
-            setTimeout(() => {
-              poolClient.updatePool(bridgeAddress);
-              if (acc) {
-                poolClient.updateUser(acc, bridgeAddress);
-              }
-            }, 45000);
-          });
+          // // Scope to closure.
+          // const acc = account;
+          // emitter.on("txConfirmed", () => {
+          //   setTimeout(() => {
+          //     poolClient.updatePool(bridgeAddress);
+          //     if (acc) {
+          //       poolClient.updateUser(acc, bridgeAddress);
+          //     }
+          //   }, 45000);
+          // });
         }
 
         return transaction;

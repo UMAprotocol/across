@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import Tabs from "../Tabs";
 import AddLiquidityForm from "./AddLiquidityForm";
 import RemoveLiqudityForm from "./RemoveLiquidityForm";
+import { QuerySubState } from "@reduxjs/toolkit/dist/query/core/apiState";
 
 import {
   Wrapper,
@@ -30,6 +31,8 @@ interface Props {
   bridgeAddress: string;
   lpTokens: ethers.BigNumber;
   tokenAddress: string;
+  ethBalance: QuerySubState<any> | null | undefined;
+  erc20Balances: QuerySubState<any> | null | undefined;
 }
 
 const PoolForm: FC<Props> = ({
@@ -44,10 +47,14 @@ const PoolForm: FC<Props> = ({
   bridgeAddress,
   lpTokens,
   tokenAddress,
+  ethBalance,
+  erc20Balances,
 }) => {
   const [inputAmount, setInputAmount] = useState("");
   const [removeAmount, setRemoveAmount] = useState(0);
   const [error] = useState<Error>();
+
+  console.log("ethBalance", ethBalance, "erc20Balances", erc20Balances);
 
   return (
     <Wrapper>

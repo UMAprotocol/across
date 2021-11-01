@@ -7,13 +7,10 @@ import { POOL_LIST, Token } from "utils";
 import { useAppSelector, useConnection } from "state/hooks";
 import get from "lodash/get";
 import { poolClient } from "state/poolsApi";
+import { useBalances, useETHBalance } from "state/chainApi";
 
 const Pool: FC = () => {
   const [token, setToken] = useState<Token>(POOL_LIST[0]);
-  const [totalPoolSize, setTotalPoolSize] = useState(
-    ethers.BigNumber.from("0")
-  );
-  const [apy, setApy] = useState("0.00%");
 
   const pool = useAppSelector((state) => state.pools.pools[token.bridgePool]);
   const connection = useAppSelector((state) => state.connection);
@@ -26,30 +23,24 @@ const Pool: FC = () => {
     ])
   );
 
-  const { isConnected } = useConnection();
+  const { isConnected, account } = useConnection();
+
+  const queries = useAppSelector(
+    (state) => state.api.queries
+    // state.api.queries[`balances({"account":${account},"chainId":1})`]
+  );
 
   // Update pool info when token changes
   useEffect(() => {
     poolClient.updatePool(token.bridgePool);
   }, [token]);
 
-  // useEffect(() => {
-  //   if (pool) {
-  //     console.log("in this pool effect?");
-  //     setTotalPoolSize(ethers.BigNumber.from(pool.totalPoolSize || "0"));
-  //     setApy(`${Number(pool.estimatedApy || 0) * 100}%`);
-  //   }
-  // }, [token, pool]);
-
   useEffect(() => {
     if (isConnected && connection.account && token.bridgePool) {
-      console.log("in this user effect?");
-
       poolClient.updateUser(connection.account, token.bridgePool);
     }
   }, [isConnected, connection.account, token.bridgePool]);
 
-  // console.log("pool?", pool, "userPosition?", userPosition);
   return (
     <Layout>
       <PoolSelection setToken={setToken} />
@@ -89,6 +80,17 @@ const Pool: FC = () => {
             : ethers.BigNumber.from("0")
         }
         bridgeAddress={token.bridgePool}
+        ethBalance={
+          account
+            ? // Very odd key assigned to these values.
+              queries[`ethBalance({"account":"${account}","chainId":1})`]
+            : null
+        }
+        erc20Balances={
+          account
+            ? queries[`balances({"account":"${account}","chainId":1})`]
+            : null
+        }
       />
     </Layout>
   );
