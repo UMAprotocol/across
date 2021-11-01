@@ -16,6 +16,7 @@ import { useERC20 } from "hooks";
 import { ethers } from "ethers";
 import { clients } from "@uma/sdk";
 import { addEtherscan } from "utils/notify";
+import BouncingDotsLoader from "components/BouncingDotsLoader";
 
 // max uint value is 2^256 - 1
 const MAX_UINT_VAL = ethers.constants.MaxUint256;
@@ -51,6 +52,7 @@ const AddLiquidityForm: FC<Props> = ({
   const { approve } = useERC20(tokenAddress);
 
   const [userNeedsToApprove, setUserNeedsToApprove] = useState(false);
+  const [txSubmitted, setTxSubmitted] = useState(false);
 
   const checkIfUserHasToApprove = useCallback(async () => {
     if (signer && account) {
@@ -82,9 +84,17 @@ const AddLiquidityForm: FC<Props> = ({
     });
 
     if (tx) {
+      setTxSubmitted(true);
       const { emitter } = notify.hash(tx.hash);
+      emitter.on("all", addEtherscan);
+
       emitter.on("txConfirmed", () => {
+        setTxSubmitted(false);
         setUserNeedsToApprove(false);
+      });
+
+      emitter.on("txError", () => {
+        setTxSubmitted(false);
       });
     }
   };
@@ -117,11 +127,14 @@ const AddLiquidityForm: FC<Props> = ({
 
         console.log("txId", txId, "transaction", transaction);
         if (transaction.hash) {
+          setTxSubmitted(true);
+
           const { emitter } = notify.hash(transaction.hash);
           emitter.on("all", addEtherscan);
           // Scope to closure.
           const acc = account;
           emitter.on("txConfirmed", (tx: any) => {
+            setTxSubmitted(false);
             setShowSuccess(true);
             console.log("tx", tx);
             const url = `https://etherscan.io/tx/${transaction.hash}`;
@@ -132,6 +145,9 @@ const AddLiquidityForm: FC<Props> = ({
                 poolClient.updateUser(acc, bridgeAddress);
               }
             }, 45000);
+          });
+          emitter.on("txError", () => {
+            setTxSubmitted(false);
           });
         }
 
@@ -183,6 +199,7 @@ const AddLiquidityForm: FC<Props> = ({
           : userNeedsToApprove
           ? "Approve"
           : "Add liquidity"}
+        {txSubmitted ? <BouncingDotsLoader /> : null}
       </FormButton>
     </>
   );
