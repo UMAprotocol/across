@@ -113,10 +113,12 @@ const AddLiquidityForm: FC<Props> = ({
           // Scope to closure.
           const acc = account;
           emitter.on("txConfirmed", () => {
-            poolClient.updatePool(bridgeAddress);
-            if (acc) {
-              poolClient.updateUser(acc, bridgeAddress);
-            }
+            setTimeout(() => {
+              poolClient.updatePool(bridgeAddress);
+              if (acc) {
+                poolClient.updateUser(acc, bridgeAddress);
+              }
+            }, 45000);
           });
         }
 
