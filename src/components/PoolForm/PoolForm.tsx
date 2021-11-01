@@ -34,6 +34,7 @@ interface Props {
   ethBalance: QuerySubState<any> | null | undefined;
   erc20Balances: QuerySubState<any> | null | undefined;
   setShowSuccess: React.Dispatch<React.SetStateAction<boolean>>;
+  setDepositUrl: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const PoolForm: FC<Props> = ({
@@ -51,6 +52,7 @@ const PoolForm: FC<Props> = ({
   ethBalance,
   erc20Balances,
   setShowSuccess,
+  setDepositUrl,
 }) => {
   const [inputAmount, setInputAmount] = useState("");
   const [removeAmount, setRemoveAmount] = useState(0);
@@ -110,6 +112,7 @@ const PoolForm: FC<Props> = ({
             symbol={symbol}
             tokenAddress={tokenAddress}
             setShowSuccess={setShowSuccess}
+            setDepositUrl={setDepositUrl}
           />
         </TabContentWrapper>
         <TabContentWrapper data-label="Remove">
@@ -121,6 +124,7 @@ const PoolForm: FC<Props> = ({
             decimals={decimals}
             symbol={symbol}
             setShowSuccess={setShowSuccess}
+            setDepositUrl={setDepositUrl}
           />
         </TabContentWrapper>
       </Tabs>

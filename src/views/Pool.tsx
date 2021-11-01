@@ -97,12 +97,14 @@ const Pool: FC = () => {
                 : null
             }
             setShowSuccess={setShowSuccess}
+            setDepositUrl={setDepositUrl}
           />
         </>
       ) : (
         <DepositSuccess
           depositUrl={depositUrl}
           setShowSuccess={setShowSuccess}
+          setDepositUrl={setDepositUrl}
         />
       )}
     </Layout>

@@ -14,6 +14,7 @@ import { toWeiSafe } from "utils/weiMath";
 import { useERC20 } from "hooks";
 import { ethers } from "ethers";
 import { clients } from "@uma/sdk";
+import { addEtherscan } from "utils/notify";
 
 // max uint value is 2^256 - 1
 const MAX_UINT_VAL = ethers.constants.MaxUint256;
@@ -28,6 +29,7 @@ interface Props {
   symbol: string;
   tokenAddress: string;
   setShowSuccess: React.Dispatch<React.SetStateAction<boolean>>;
+  setDepositUrl: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const AddLiquidityForm: FC<Props> = ({
@@ -39,6 +41,7 @@ const AddLiquidityForm: FC<Props> = ({
   symbol,
   tokenAddress,
   setShowSuccess,
+  setDepositUrl,
 }) => {
   const { init } = onboard;
   const { isConnected, provider, signer, notify, account } = useConnection();
@@ -112,16 +115,21 @@ const AddLiquidityForm: FC<Props> = ({
         console.log("txId", txId, "transaction", transaction);
         if (transaction.hash) {
           const { emitter } = notify.hash(transaction.hash);
-          // // Scope to closure.
-          // const acc = account;
-          // emitter.on("txConfirmed", () => {
-          //   setTimeout(() => {
-          //     poolClient.updatePool(bridgeAddress);
-          //     if (acc) {
-          //       poolClient.updateUser(acc, bridgeAddress);
-          //     }
-          //   }, 45000);
-          // });
+          emitter.on("all", addEtherscan);
+          // Scope to closure.
+          const acc = account;
+          emitter.on("txConfirmed", (tx: any) => {
+            setShowSuccess(true);
+            console.log("tx", tx);
+            const url = `https://etherscan.io/tx/${transaction.hash}`;
+            setDepositUrl(url);
+            setTimeout(() => {
+              poolClient.updatePool(bridgeAddress);
+              if (acc) {
+                poolClient.updateUser(acc, bridgeAddress);
+              }
+            }, 45000);
+          });
         }
 
         return transaction;

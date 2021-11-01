@@ -12,6 +12,7 @@ import {
 import { ethers } from "ethers";
 import { toWeiSafe } from "utils/weiMath";
 import { poolClient } from "state/poolsApi";
+import { addEtherscan } from "utils/notify";
 
 const toBN = ethers.BigNumber.from;
 
@@ -23,6 +24,7 @@ interface Props {
   decimals: number;
   symbol: string;
   setShowSuccess: React.Dispatch<React.SetStateAction<boolean>>;
+  setDepositUrl: React.Dispatch<React.SetStateAction<string>>;
 }
 const RemoveLiqudityForm: FC<Props> = ({
   removeAmount,
@@ -32,6 +34,7 @@ const RemoveLiqudityForm: FC<Props> = ({
   decimals,
   symbol,
   setShowSuccess,
+  setDepositUrl,
 }) => {
   const { init } = onboard;
   const { isConnected, provider, signer, account, notify } = useConnection();
@@ -73,9 +76,14 @@ const RemoveLiqudityForm: FC<Props> = ({
         console.log("txId", txId, "transaction", transaction);
         if (transaction.hash) {
           const { emitter } = notify.hash(transaction.hash);
+          emitter.on("all", addEtherscan);
+
           // Scope to closure.
           const acc = account;
-          emitter.on("txConfirmed", () => {
+          emitter.on("txConfirmed", (tx) => {
+            setShowSuccess(true);
+            const url = `https://etherscan.io/tx/${transaction.hash}`;
+            setDepositUrl(url);
             poolClient.updatePool(bridgeAddress);
             if (acc) {
               poolClient.updateUser(acc, bridgeAddress);
