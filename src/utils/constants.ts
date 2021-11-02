@@ -92,7 +92,7 @@ export const TOKENS_LIST: Record<ChainId, TokenList> = {
       symbol: "USDC",
       decimals: 6,
       logoURI: usdcLogo,
-      bridgePool: "0x190978cC580f5A48D55A4A20D0A952FA1dA3C057",
+      bridgePool: "0x54d8d0a00b8288b49694a765C59694ddE8e4B931",
     },
     {
       address: ethers.constants.AddressZero,
