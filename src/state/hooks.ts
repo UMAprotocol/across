@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useEffect, useState } from "react";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 import { bindActionCreators } from "redux";
 import {
   getDepositBox,
@@ -20,7 +20,7 @@ import {
   toAddress as toAddressAction,
   error as sendErrorAction,
 } from "./send";
-import { useAllowance, useBridgeFees } from "./chainApi";
+import { useAllowance, useBridgeFees, useBalances } from "./chainApi";
 import { add } from "./transactions";
 import { deposit as depositAction, toggle } from "./deposits";
 
@@ -253,3 +253,21 @@ export {
   useETHBalance,
   useBridgeFees,
 } from "./chainApi";
+
+export function useBalance(params: {
+  chainId: ChainId;
+  account: string;
+  tokenAddress: string;
+}) {
+  const { chainId, account, tokenAddress } = params;
+  const { data: balances, ...rest } = useBalances({ chainId, account });
+  const tokenList = TOKENS_LIST[chainId];
+  const selectedIndex = tokenList.findIndex(
+    ({ address }) => address === tokenAddress
+  );
+  const balance = balances ? balances[selectedIndex] : BigNumber.from("0");
+  return {
+    balance,
+    ...rest,
+  };
+}

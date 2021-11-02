@@ -1,5 +1,5 @@
 import React from "react";
-import {ethers} from 'ethers'
+import { ethers } from "ethers";
 import {
   useBridgeFees,
   useConnection,
@@ -8,16 +8,17 @@ import {
   useTransactions,
   useBlocks,
   useAllowance,
+  useBalance,
 } from "state/hooks";
 import { TransactionTypes } from "state/transactions";
 import { useERC20 } from "hooks";
 import { CHAINS, getDepositBox, TOKENS_LIST, formatUnits } from "utils";
 import { PrimaryButton, AccentSection } from "components";
 import { Wrapper, Info } from "./SendAction.styles";
-import api from 'state/chainApi'
+import api from "state/chainApi";
 
-const CONFIRMATIONS = 1
-const MAX_APPROVAL_AMOUNT = ethers.constants.MaxUint256
+const CONFIRMATIONS = 1;
+const MAX_APPROVAL_AMOUNT = ethers.constants.MaxUint256;
 const SendAction: React.FC = () => {
   const {
     amount,
@@ -37,10 +38,15 @@ const SendAction: React.FC = () => {
   const { addDeposit } = useDeposits();
   const { approve } = useERC20(token);
   const { signer } = useConnection();
-  const [updateEthBalance] = api.endpoints.ethBalance.useLazyQuery()
+  const [updateEthBalance] = api.endpoints.ethBalance.useLazyQuery();
   // trigger balance update
-  const [updateBalances] = api.endpoints.balances.useLazyQuery()
+  const [updateBalances] = api.endpoints.balances.useLazyQuery();
   const tokenInfo = TOKENS_LIST[fromChain].find((t) => t.address === token);
+  const { balance } = useBalance({
+    account: account || "",
+    tokenAddress: token,
+    chainId: fromChain,
+  });
 
   const { data: fees } = useBridgeFees(
     {
@@ -63,7 +69,11 @@ const SendAction: React.FC = () => {
     { skip: !account }
   );
   const handleApprove = async () => {
-    const tx = await approve({ amount:MAX_APPROVAL_AMOUNT, spender: depositBox.address, signer });
+    const tx = await approve({
+      amount: MAX_APPROVAL_AMOUNT,
+      spender: depositBox.address,
+      signer,
+    });
     if (tx) {
       addTransaction({ ...tx, meta: { label: TransactionTypes.APPROVE } });
       await tx.wait(CONFIRMATIONS);
@@ -77,9 +87,9 @@ const SendAction: React.FC = () => {
       const receipt = await tx.wait(CONFIRMATIONS);
       addDeposit({ tx: receipt, toChain, fromChain, amount, token, toAddress });
       // update balances after tx
-      if(account){
-        updateEthBalance({chainId:fromChain,account});
-        updateBalances({chainId:fromChain,account});
+      if (account) {
+        updateEthBalance({ chainId: fromChain, account });
+        updateBalances({ chainId: fromChain, account });
       }
     }
   };
@@ -106,7 +116,10 @@ const SendAction: React.FC = () => {
           .sub(fees.lpFee.total)
       : amount;
 
-  const buttonDisabled = (!hasToApprove && !canSend) || amountMinusFees.lte(0);
+  const buttonDisabled =
+    balance?.lt(amount) ||
+    (!hasToApprove && !canSend) ||
+    amountMinusFees.lte(0);
 
   return (
     <AccentSection>
