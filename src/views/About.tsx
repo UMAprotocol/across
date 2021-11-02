@@ -1,6 +1,8 @@
 import { FC } from "react";
 import Layout from "components/Layout";
 import styled from "@emotion/styled";
+import DiscordLogo from "assets/disc-logo.svg";
+import TwitterLogo from "assets/icon-twitter.svg";
 
 const About: FC = () => {
   return (
@@ -30,6 +32,15 @@ const About: FC = () => {
         </BodyText>
         <Subheader>Team maybe</Subheader>
         <BodyText>To give confidence and lorem ipsum. Link to UMA</BodyText>
+        <GreyBox />
+        <SocialLinksWrapper>
+          <SocialLink href="https://discord.gg/yyxGkUqW" rel="noreferrer">
+            <img src={DiscordLogo} alt="discord_img" />
+          </SocialLink>
+          <SocialLink href="https://twitter.com/umaprotocol" rel="noreferrer">
+            <img src={TwitterLogo} alt="twitter_img" />
+          </SocialLink>
+        </SocialLinksWrapper>
       </Wrapper>
     </Layout>
   );
@@ -38,6 +49,7 @@ const About: FC = () => {
 const Wrapper = styled.div`
   padding: 1.5rem;
 `;
+
 const Header = styled.h2`
   font-size: 1.25rem;
   font-weight: 700;
@@ -72,5 +84,27 @@ const Link = styled.a`
   margin-bottom: 1.25rem;
   text-decoration: underline;
   color: hsla(166, 92%, 70%, 1);
+`;
+
+const GreyBox = styled.div`
+  width: 100%;
+  height: 20vh;
+  background-color: #c4c4c4;
+  margin-top: 1rem;
+`;
+
+const SocialLinksWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 15vh;
+`;
+
+const SocialLink = styled.a`
+  img {
+    height: 45px;
+    width: 40px;
+    margin: 0 1rem;
+
+  }
 `;
 export default About;
