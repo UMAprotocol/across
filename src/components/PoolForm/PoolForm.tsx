@@ -56,13 +56,10 @@ const PoolForm: FC<Props> = ({
   setDepositUrl,
   balance,
 }) => {
-  console.log("balance", balance.toString());
 
   const [inputAmount, setInputAmount] = useState("");
   const [removeAmount, setRemoveAmount] = useState(0);
   const [error] = useState<Error>();
-
-  console.log("ethBalance", ethBalance, "erc20Balances", erc20Balances);
 
   return (
     <Wrapper>

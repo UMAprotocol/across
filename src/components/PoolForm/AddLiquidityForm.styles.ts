@@ -66,9 +66,8 @@ export const Balance = styled.div`
   display: flex;
   justify-content: flex-end;
   span {
-    color: hsla(166, 92%, 70%, 1);
+    --color: var(--color-primary);
     font-size: 0.75rem;
-    font-family: "Barlow";
     line-height: 1rem;
     margin-right: 1.5rem;
     margin-top: 0.66rem;

@@ -22,7 +22,7 @@ const BouncingWrapper = styled.div`
     height: 6px;
     margin: 2px 4px;
     border-radius: 50%;
-    background-color: hsla(230, 6%, 19%, 1);
+    background-color: var(--color-gray);
     opacity: 1;
     animation: bouncing-loader 0.6s infinite alternate;
   }
