@@ -8,7 +8,6 @@ import {
   useTransactions,
   useBlocks,
   useAllowance,
-  useBalance,
 } from "state/hooks";
 import { TransactionTypes } from "state/transactions";
 import { useERC20 } from "hooks";
@@ -27,6 +26,7 @@ const SendAction: React.FC = () => {
     token,
     send,
     hasToApprove,
+    canApprove,
     canSend,
     toAddress,
   } = useSend();
@@ -42,11 +42,6 @@ const SendAction: React.FC = () => {
   // trigger balance update
   const [updateBalances] = api.endpoints.balances.useLazyQuery();
   const tokenInfo = TOKENS_LIST[fromChain].find((t) => t.address === token);
-  const { balance } = useBalance({
-    account: account || "",
-    tokenAddress: token,
-    chainId: fromChain,
-  });
 
   const { data: fees } = useBridgeFees(
     {
@@ -117,8 +112,8 @@ const SendAction: React.FC = () => {
       : amount;
 
   const buttonDisabled =
-    balance?.lt(amount) ||
     (!hasToApprove && !canSend) ||
+    (hasToApprove && !canApprove) ||
     amountMinusFees.lte(0);
 
   return (

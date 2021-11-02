@@ -20,7 +20,7 @@ import {
   toAddress as toAddressAction,
   error as sendErrorAction,
 } from "./send";
-import { useAllowance, useBridgeFees, useBalances } from "./chainApi";
+import chainApi, { useAllowance, useBridgeFees } from "./chainApi";
 import { add } from "./transactions";
 import { deposit as depositAction, toggle } from "./deposits";
 
@@ -101,6 +101,11 @@ export function useSend() {
     dispatch
   );
 
+  const { balance } = useBalance({
+    chainId: fromChain,
+    account,
+    tokenAddress: token,
+  });
   const { block } = useBlocks(toChain);
 
   const depositBox = getDepositBox(fromChain);
@@ -114,6 +119,7 @@ export function useSend() {
     },
     { skip: !account || !isConnected || !depositBox }
   );
+  const canApprove = balance.gte(amount) && amount.gte(0);
   const hasToApprove = allowance?.hasToApprove ?? false;
 
   const hasToSwitchChain = isConnected && fromChain !== chainId;
@@ -142,7 +148,8 @@ export function useSend() {
       !hasToApprove &&
       !hasToSwitchChain &&
       !error &&
-      !fees.isAmountTooLow,
+      !fees.isAmountTooLow &&
+      balance.gte(amount),
     [
       fromChain,
       block,
@@ -154,6 +161,7 @@ export function useSend() {
       hasToApprove,
       hasToSwitchChain,
       error,
+      balance,
     ]
   );
   const send = useCallback(async () => {
@@ -217,6 +225,7 @@ export function useSend() {
     setToAddress: actions.toAddressAction,
     setError: actions.sendErrorAction,
     canSend,
+    canApprove,
     hasToApprove,
     hasToSwitchChain,
     send,
@@ -256,18 +265,25 @@ export {
 
 export function useBalance(params: {
   chainId: ChainId;
-  account: string;
+  account?: string;
   tokenAddress: string;
 }) {
   const { chainId, account, tokenAddress } = params;
-  const { data: balances, ...rest } = useBalances({ chainId, account });
+  // const { data: balances, ...rest } = useBalances({ chainId, account });
+  const [updateBalances, result] = chainApi.endpoints.balances.useLazyQuery();
+  function refetch() {
+    if (account) updateBalances({ chainId, account });
+  }
+  useEffect(refetch, [chainId, account, tokenAddress, updateBalances]);
   const tokenList = TOKENS_LIST[chainId];
   const selectedIndex = tokenList.findIndex(
     ({ address }) => address === tokenAddress
   );
-  const balance = balances ? balances[selectedIndex] : BigNumber.from("0");
+  const balance = result?.data
+    ? result.data[selectedIndex]
+    : BigNumber.from("0");
   return {
     balance,
-    ...rest,
+    refetch,
   };
 }
