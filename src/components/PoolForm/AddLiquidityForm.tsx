@@ -62,8 +62,6 @@ const AddLiquidityForm: FC<Props> = ({
         const token = clients.erc20.connect(tokenAddress, signer);
         const allowance = await token.allowance(account, bridgeAddress);
 
-        const balance = await token.balanceOf(account);
-
         const hasToApprove = allowance.lt(balance);
         if (hasToApprove) {
           setUserNeedsToApprove(true);
@@ -72,7 +70,7 @@ const AddLiquidityForm: FC<Props> = ({
         console.log("err in check approval call", err);
       }
     }
-  }, [account, tokenAddress, bridgeAddress, signer]);
+  }, [account, tokenAddress, bridgeAddress, signer, balance]);
 
   useEffect(() => {
     if (isConnected && symbol !== "ETH") checkIfUserHasToApprove();
@@ -101,7 +99,7 @@ const AddLiquidityForm: FC<Props> = ({
     }
   };
 
-  const handleButtonClick = async () => {
+  const approveOrPoolTransactionHandler = async () => {
     if (!provider) {
       return init();
     }
@@ -154,7 +152,7 @@ const AddLiquidityForm: FC<Props> = ({
 
         return transaction;
       } catch (err) {
-        console.log("err in AddEthLiqudity call", err);
+        console.error("err in AddEthLiqudity call", err);
       }
     }
   };
@@ -206,7 +204,7 @@ const AddLiquidityForm: FC<Props> = ({
           Balance: {ethers.utils.formatUnits(balance, decimals)} {symbol}
         </span>
       </Balance>
-      <FormButton onClick={handleButtonClick}>
+      <FormButton onClick={ () => approveOrPoolTransactionHandler().catch(err => console.error("Error on click to approve or pool tx", err))}>
         {!isConnected
           ? "Connect wallet"
           : userNeedsToApprove

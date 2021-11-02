@@ -97,7 +97,7 @@ const RemoveLiqudityForm: FC<Props> = ({
         }
         return transaction;
       } catch (err) {
-        console.log("err in RemoveLiquidity call", err);
+        console.error("err in RemoveLiquidity call", err);
       }
     }
   };
