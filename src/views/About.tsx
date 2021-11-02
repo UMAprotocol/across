@@ -83,7 +83,10 @@ const Link = styled.a`
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
   text-decoration: underline;
-  color: hsla(166, 92%, 70%, 1);
+  color: var(--color-primary);
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const GreyBox = styled.div`
