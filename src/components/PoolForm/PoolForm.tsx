@@ -79,15 +79,13 @@ const PoolForm: FC<Props> = ({
           <PositionBlock>
             <PositionBlockItem>Fees earned</PositionBlockItem>
             <PositionBlockItem>
-              {ethers.utils.formatUnits(feesEarned, decimals)}
-              {symbol}
+              {ethers.utils.formatUnits(feesEarned, decimals)} {symbol}
             </PositionBlockItem>
           </PositionBlock>
           <PositionBlock>
             <PositionBlockItemBold>Total</PositionBlockItemBold>
             <PositionBlockItemBold>
-              {ethers.utils.formatUnits(totalPosition, decimals)}
-              {symbol}
+              {ethers.utils.formatUnits(totalPosition, decimals)} {symbol}
             </PositionBlockItemBold>
           </PositionBlock>
         </PositionWrapper>
