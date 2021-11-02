@@ -33,6 +33,7 @@ interface Props {
   setShowSuccess: React.Dispatch<React.SetStateAction<boolean>>;
   setDepositUrl: React.Dispatch<React.SetStateAction<string>>;
   balance: ethers.BigNumber;
+  setAmount: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const AddLiquidityForm: FC<Props> = ({
@@ -46,6 +47,7 @@ const AddLiquidityForm: FC<Props> = ({
   setShowSuccess,
   setDepositUrl,
   balance,
+  setAmount,
 }) => {
   const { init } = onboard;
   const { isConnected, provider, signer, notify, account } = useConnection();
@@ -175,7 +177,19 @@ const AddLiquidityForm: FC<Props> = ({
               : "var(--color-primary)",
           }}
         >
-          <MaxButton onClick={() => null} disabled={!isConnected}>
+          <MaxButton
+            onClick={() => {
+              if (symbol === "ETH") {
+                const removeApproxMaxGas = toWeiSafe("0.1");
+                setAmount(
+                  ethers.utils.formatEther(balance.sub(removeApproxMaxGas))
+                );
+              } else {
+                setAmount(ethers.utils.formatUnits(balance, decimals));
+              }
+            }}
+            disabled={!isConnected}
+          >
             max
           </MaxButton>
           <Input

@@ -118,6 +118,7 @@ const PoolForm: FC<Props> = ({
             setShowSuccess={setShowSuccess}
             setDepositUrl={setDepositUrl}
             balance={balance}
+            setAmount={setInputAmount}
           />
         </TabContentWrapper>
         <TabContentWrapper data-label="Remove">
