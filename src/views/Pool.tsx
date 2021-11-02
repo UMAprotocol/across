@@ -8,7 +8,8 @@ import { POOL_LIST, Token } from "utils";
 import { useAppSelector, useConnection } from "state/hooks";
 import get from "lodash/get";
 import { poolClient } from "state/poolsApi";
-import createERC20ContractInstance from "utils/createERC20Instance";
+import { clients } from "@uma/sdk";
+
 
 const Pool: FC = () => {
   const [token, setToken] = useState<Token>(POOL_LIST[0]);
@@ -48,7 +49,7 @@ const Pool: FC = () => {
   useEffect(() => {
     if (isConnected && signer && account && provider) {
       if (token.symbol !== "ETH") {
-        const erc20 = createERC20ContractInstance(signer, token.address);
+        const erc20 = clients.erc20.connect(token.address, signer);
         erc20.balanceOf(account).then((res: ethers.BigNumber) => {
           setBalance(res);
         });
