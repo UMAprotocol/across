@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useEffect, useState } from "react";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 import { bindActionCreators } from "redux";
 import {
   getDepositBox,
@@ -20,7 +20,7 @@ import {
   toAddress as toAddressAction,
   error as sendErrorAction,
 } from "./send";
-import { useAllowance, useBridgeFees } from "./chainApi";
+import chainApi, { useAllowance, useBridgeFees } from "./chainApi";
 import { add } from "./transactions";
 import { deposit as depositAction, toggle } from "./deposits";
 
@@ -101,6 +101,11 @@ export function useSend() {
     dispatch
   );
 
+  const { balance } = useBalance({
+    chainId: fromChain,
+    account,
+    tokenAddress: token,
+  });
   const { block } = useBlocks(toChain);
 
   const depositBox = getDepositBox(fromChain);
@@ -114,6 +119,7 @@ export function useSend() {
     },
     { skip: !account || !isConnected || !depositBox }
   );
+  const canApprove = balance.gte(amount) && amount.gte(0);
   const hasToApprove = allowance?.hasToApprove ?? false;
 
   const hasToSwitchChain = isConnected && fromChain !== chainId;
@@ -143,7 +149,8 @@ export function useSend() {
       !hasToSwitchChain &&
       !error &&
       !fees.isAmountTooLow &&
-      !fees.isLiquidityInsufficient,
+      !fees.isLiquidityInsufficient && 
+      balance.gte(amount),
     [
       fromChain,
       block,
@@ -155,6 +162,7 @@ export function useSend() {
       hasToApprove,
       hasToSwitchChain,
       error,
+      balance,
     ]
   );
   const send = useCallback(async () => {
@@ -218,6 +226,7 @@ export function useSend() {
     setToAddress: actions.toAddressAction,
     setError: actions.sendErrorAction,
     canSend,
+    canApprove,
     hasToApprove,
     hasToSwitchChain,
     send,
@@ -254,3 +263,28 @@ export {
   useETHBalance,
   useBridgeFees,
 } from "./chainApi";
+
+export function useBalance(params: {
+  chainId: ChainId;
+  account?: string;
+  tokenAddress: string;
+}) {
+  const { chainId, account, tokenAddress } = params;
+  // const { data: balances, ...rest } = useBalances({ chainId, account });
+  const [updateBalances, result] = chainApi.endpoints.balances.useLazyQuery();
+  function refetch() {
+    if (account) updateBalances({ chainId, account });
+  }
+  useEffect(refetch, [chainId, account, tokenAddress, updateBalances]);
+  const tokenList = TOKENS_LIST[chainId];
+  const selectedIndex = tokenList.findIndex(
+    ({ address }) => address === tokenAddress
+  );
+  const balance = result?.data
+    ? result.data[selectedIndex]
+    : BigNumber.from("0");
+  return {
+    balance,
+    refetch,
+  };
+}
