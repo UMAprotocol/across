@@ -1,4 +1,5 @@
 import React from "react";
+import {ethers} from 'ethers'
 import {
   useBridgeFees,
   useConnection,
@@ -14,6 +15,8 @@ import { CHAINS, getDepositBox, TOKENS_LIST, formatUnits } from "utils";
 import { PrimaryButton, AccentSection } from "components";
 import { Wrapper, Info } from "./SendAction.styles";
 
+const CONFIRMATIONS = 1
+const MAX_APPROVAL_AMOUNT = ethers.constants.MaxUint256
 const SendAction: React.FC = () => {
   const { amount, fromChain, toChain, token, send, hasToApprove, canSend, toAddress } =
     useSend();
@@ -48,10 +51,10 @@ const SendAction: React.FC = () => {
     { skip: !account }
   );
   const handleApprove = async () => {
-    const tx = await approve({ amount, spender: depositBox.address, signer });
+    const tx = await approve({ amount:MAX_APPROVAL_AMOUNT, spender: depositBox.address, signer });
     if (tx) {
       addTransaction({ ...tx, meta: { label: TransactionTypes.APPROVE } });
-      await tx.wait();
+      await tx.wait(CONFIRMATIONS);
       refetch();
     }
   };
@@ -59,7 +62,7 @@ const SendAction: React.FC = () => {
     const tx = await send();
     if (tx) {
       addTransaction({ ...tx, meta: { label: TransactionTypes.DEPOSIT } });
-      const receipt = await tx.wait();
+      const receipt = await tx.wait(CONFIRMATIONS);
       addDeposit({ tx: receipt, toChain, fromChain, amount, token, toAddress });
     }
   };
