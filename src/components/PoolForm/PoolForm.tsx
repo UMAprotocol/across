@@ -56,7 +56,6 @@ const PoolForm: FC<Props> = ({
   setDepositUrl,
   balance,
 }) => {
-
   const [inputAmount, setInputAmount] = useState("");
   const [removeAmount, setRemoveAmount] = useState(0);
   const [error] = useState<Error>();

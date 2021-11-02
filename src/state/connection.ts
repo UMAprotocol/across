@@ -22,7 +22,6 @@ export type Update = Omit<State, "error" | "chainId" | "notify"> & {
 };
 type ErrorUpdate = Required<Pick<State, "error">>;
 
-
 const initialState: State = {
   notify: Notify({
     dappId: process.env.REACT_APP_PUBLIC_ONBOARD_API_KEY, // [String] The API key created by step one above

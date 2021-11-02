@@ -204,7 +204,13 @@ const AddLiquidityForm: FC<Props> = ({
           Balance: {ethers.utils.formatUnits(balance, decimals)} {symbol}
         </span>
       </Balance>
-      <FormButton onClick={ () => approveOrPoolTransactionHandler().catch(err => console.error("Error on click to approve or pool tx", err))}>
+      <FormButton
+        onClick={() =>
+          approveOrPoolTransactionHandler().catch((err) =>
+            console.error("Error on click to approve or pool tx", err)
+          )
+        }
+      >
         {!isConnected
           ? "Connect wallet"
           : userNeedsToApprove

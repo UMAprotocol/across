@@ -1,4 +1,4 @@
-import {FC} from "react";
+import { FC } from "react";
 import { Switch, Route, useLocation } from "react-router-dom";
 import { Send, Confirmation, Pool, About } from "views";
 import { Header, SuperHeader } from "components";
@@ -10,10 +10,9 @@ import {
   switchChain,
 } from "utils";
 
+interface Props {}
 
-interface Props{}
-
-const MAINNET_CHAINID = 1
+const MAINNET_CHAINID = 1;
 
 // Need this component for useLocation hook
 const Routes: FC<Props> = () => {
@@ -22,10 +21,11 @@ const Routes: FC<Props> = () => {
   const { error, provider, chainId } = useConnection();
   const location = useLocation();
   const wrongNetworkSend =
-  provider &&
-  (error instanceof UnsupportedChainIdError || chainId !== fromChain);
-  const wrongNetworkPool =   provider &&
-  (error instanceof UnsupportedChainIdError || chainId !== MAINNET_CHAINID);
+    provider &&
+    (error instanceof UnsupportedChainIdError || chainId !== fromChain);
+  const wrongNetworkPool =
+    provider &&
+    (error instanceof UnsupportedChainIdError || chainId !== MAINNET_CHAINID);
   return (
     <>
       {wrongNetworkSend && location.pathname === "/" && (
@@ -62,7 +62,7 @@ const Routes: FC<Props> = () => {
         />
       </Switch>
     </>
-  )
-}
+  );
+};
 
 export default Routes;

@@ -1,9 +1,21 @@
 import { FC } from "react";
 import styled from "@emotion/styled";
 
-interface Props {}
+export type BounceType = "default | big";
 
-const BouncingDotsLoader: FC<Props> = () => {
+interface Props {
+  type?: BounceType;
+}
+
+const BouncingDotsLoader: FC<Props> = ({ type = "default" }) => {
+  if (type === "big")
+    return (
+      <BigBouncingWrapper>
+        <div />
+        <div />
+        <div />
+      </BigBouncingWrapper>
+    );
   return (
     <BouncingWrapper>
       <div />
@@ -39,6 +51,15 @@ const BouncingWrapper = styled.div`
 
   > div:nth-child(3) {
     animation-delay: 0.4s;
+  }
+`;
+
+const BigBouncingWrapper = styled(BouncingWrapper)`
+  margin-left: 0;
+  display: inline-flex;
+  > div {
+    height: 12px;
+    width: 12px;
   }
 `;
 
