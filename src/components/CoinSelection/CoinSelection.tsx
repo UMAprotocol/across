@@ -110,7 +110,7 @@ const CoinSelection = () => {
         ({ address }) => address === selectedItem.address
       );
       const isEth = tokenList[selectedIndex].symbol === "ETH";
-      // TODO: need to select max of 0 and balances.sub. 
+      // TODO: need to select max of 0 and balances.sub.
       const balance = isEth
         ? balances[selectedIndex].sub(ethers.utils.parseEther("0.004"))
         : balances[selectedIndex];
@@ -134,9 +134,14 @@ const CoinSelection = () => {
     ? error.message
     : fees?.isAmountTooLow
     ? "Bridge fee is too high. Try sending a larger amount."
+    : fees?.isLiquidityInsufficient
+    ? `Insufficient liquidity for ${selectedItem?.symbol}.`
     : undefined;
 
-  const showError = error || (fees?.isAmountTooLow && amount.gt(0));
+  const showError =
+    error ||
+    (fees?.isAmountTooLow && amount.gt(0)) ||
+    (fees?.isLiquidityInsufficient && amount.gt(0));
 
   return (
     <Section>

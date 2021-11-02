@@ -142,7 +142,8 @@ export function useSend() {
       !hasToApprove &&
       !hasToSwitchChain &&
       !error &&
-      !fees.isAmountTooLow,
+      !fees.isAmountTooLow &&
+      !fees.isLiquidityInsufficient,
     [
       fromChain,
       block,
