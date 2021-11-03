@@ -61,7 +61,9 @@ const CoinSelection = () => {
     },
   });
   const [inputAmount, setInputAmount] = React.useState<string>(
-    selectedItem ? formatUnits(amount, selectedItem.decimals) : ""
+    selectedItem && amount.gt("0")
+      ? formatUnits(amount, selectedItem.decimals)
+      : ""
   );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
