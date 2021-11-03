@@ -62,7 +62,8 @@ const Routes: FC<Props> = () => {
           component={showConfirmationScreen ? Confirmation : Send}
         />
       </Switch>
-      <Footer />
+      {/* visual bug with footer. hide it in pages that aren't /about */}
+      {location.pathname === "/about" && <Footer />}
     </>
   );
 };
