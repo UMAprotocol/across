@@ -1,9 +1,9 @@
 import { FC } from "react";
 import styled from "@emotion/styled";
-import DiscordLogo from "assets/disc-logo.svg";
-import TwitterLogo from "assets/icon-twitter.svg";
 import heroBg from "assets/hero-across-bg.png";
 import BulletImg from "assets/Across-logo-bullet.svg";
+import Footer from "components/Footer";
+
 const About: FC = () => {
   return (
     <Wrapper>
@@ -64,6 +64,7 @@ const About: FC = () => {
           </BulletTextWrapper>
         </BulletWrapper>
       </BodyWrapper>
+      <Footer />
     </Wrapper>
   );
 };
@@ -103,20 +104,6 @@ const Link = styled.a`
   color: var(--color-primary);
   &:hover {
     cursor: pointer;
-  }
-`;
-
-const SocialLinksWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 15vh;
-`;
-
-const SocialLink = styled.a`
-  img {
-    height: 45px;
-    width: 40px;
-    margin: 0 1rem;
   }
 `;
 
