@@ -86,13 +86,6 @@ const RemoveLiqudityForm: FC<Props> = ({
             setShowSuccess(true);
             const url = `https://etherscan.io/tx/${transaction.hash}`;
             setDepositUrl(url);
-            // Nodes are out of sync. Update state in 30 secounds
-            setTimeout(() => {
-              poolClient.updatePool(bridgeAddress);
-              if (acc) {
-                poolClient.updateUser(acc, bridgeAddress);
-              }
-            }, 30000);
           });
         }
         return transaction;
