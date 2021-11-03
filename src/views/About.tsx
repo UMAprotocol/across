@@ -1,13 +1,18 @@
 import { FC } from "react";
-import Layout from "components/Layout";
 import styled from "@emotion/styled";
 import DiscordLogo from "assets/disc-logo.svg";
 import TwitterLogo from "assets/icon-twitter.svg";
+import heroBg from "assets/hero-across-bg.png";
 
 const About: FC = () => {
   return (
-    <Layout>
-      <Wrapper>
+    <Wrapper>
+      <Hero>
+        <HeroHeader>
+          Instantly Send Assets from L2 Rollups to L1 Ethereum
+        </HeroHeader>
+      </Hero>
+      <BodyWrapper>
         <Header>Information</Header>
         <Subheader>Subheader with SEO words</Subheader>
         <BodyText>
@@ -32,7 +37,6 @@ const About: FC = () => {
         </BodyText>
         <Subheader>Team maybe</Subheader>
         <BodyText>To give confidence and lorem ipsum. Link to UMA</BodyText>
-        <GreyBox />
         <SocialLinksWrapper>
           <SocialLink href="https://discord.gg/yyxGkUqW" rel="noreferrer">
             <img src={DiscordLogo} alt="discord_img" />
@@ -41,12 +45,32 @@ const About: FC = () => {
             <img src={TwitterLogo} alt="twitter_img" />
           </SocialLink>
         </SocialLinksWrapper>
-      </Wrapper>
-    </Layout>
+      </BodyWrapper>
+    </Wrapper>
   );
 };
 
-const Wrapper = styled.div`
+const Hero = styled.div`
+  background-image: url(${heroBg});
+  min-height: 25vh;
+  height: auto;
+`;
+
+const HeroHeader = styled.h1`
+  color: hsla(166, 92%, 70%, 1);
+  font-size: 3.5rem;
+  font-weight: 700;
+  font-family: "Barlow";
+  line-height: 4.5rem;
+  width: 90%;
+  max-width: 800px;
+  margin-left: 5rem;
+  padding-top: 2.5rem;
+`;
+
+const Wrapper = styled.div``;
+
+const BodyWrapper = styled.div`
   padding: 1.5rem;
 `;
 
@@ -87,13 +111,6 @@ const Link = styled.a`
   &:hover {
     cursor: pointer;
   }
-`;
-
-const GreyBox = styled.div`
-  width: 100%;
-  height: 20vh;
-  background-color: #c4c4c4;
-  margin-top: 1rem;
 `;
 
 const SocialLinksWrapper = styled.div`
