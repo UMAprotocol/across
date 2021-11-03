@@ -3,6 +3,8 @@ import styled from "@emotion/styled";
 import { useLocation } from "react-router-dom";
 import DiscordLogo from "assets/disc-logo.svg";
 import TwitterLogo from "assets/icon-twitter.svg";
+import PoweredByUma from "assets/powered_by_uma.png";
+
 interface Props {}
 
 const Footer: FC<Props> = () => {
@@ -92,6 +94,7 @@ const Footer: FC<Props> = () => {
           </LinkAnchor>
         </LinksListItem>
       </LinksList>
+      <PoweredImage src={PoweredByUma} alt="UMA_logo" />
     </FooterWrapper>
   );
 };
@@ -143,3 +146,5 @@ const LinksIcon = styled.img`
   height: 20px;
   width: 20px;
 `;
+
+const PoweredImage = styled.img``;
