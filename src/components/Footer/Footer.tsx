@@ -50,6 +50,13 @@ const Footer: FC<Props> = () => {
             </LinkAnchor>
           </LinksListItem>
         </LinksList>
+        <PoweredByAnchor
+          href="https://umaproject.org"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <PoweredImage />
+        </PoweredByAnchor>
       </AboutFooterWrapper>
     );
 
