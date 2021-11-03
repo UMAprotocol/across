@@ -9,6 +9,7 @@ import {
   UnsupportedChainIdError,
   switchChain,
 } from "utils";
+import Footer from "components/Footer";
 
 interface Props {}
 
@@ -61,6 +62,7 @@ const Routes: FC<Props> = () => {
           component={showConfirmationScreen ? Confirmation : Send}
         />
       </Switch>
+      <Footer />
     </>
   );
 };

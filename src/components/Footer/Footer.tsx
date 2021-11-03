@@ -8,7 +8,6 @@ interface Props {}
 const Footer: FC<Props> = () => {
   const location = useLocation();
 
-  console.log("location", location);
   if (location.pathname === "/about")
     return (
       <AboutFooterWrapper>
@@ -52,7 +51,49 @@ const Footer: FC<Props> = () => {
         </LinksList>
       </AboutFooterWrapper>
     );
-  return <FooterWrapper />;
+
+  return (
+    <FooterWrapper>
+      <LinksList>
+        <LinksListItem>
+          <LinkAnchor
+            href="https://umaproject.org"
+            target="_blank"
+            rel="noreferrer"
+          >
+            FAQ
+          </LinkAnchor>
+        </LinksListItem>
+        <LinksListItem>
+          <LinkAnchor
+            href="https://umaproject.org"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Docs
+          </LinkAnchor>
+        </LinksListItem>
+        <LinksListItem>
+          <LinkAnchor
+            href="https://discord.gg/yyxGkUqW"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <LinksIcon src={DiscordLogo} alt="discord_logo" />
+          </LinkAnchor>
+        </LinksListItem>
+        <LinksListItem>
+          <LinkAnchor
+            href="https://mobile.twitter.com/AcrossProtocol"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <LinksIcon src={TwitterLogo} alt="twitter_logo" />
+          </LinkAnchor>
+        </LinksListItem>
+      </LinksList>
+    </FooterWrapper>
+  );
 };
 
 export default Footer;
@@ -63,11 +104,15 @@ const AboutFooterWrapper = styled.footer`
   border-top: 1px solid rgba(255, 255, 255, 0.25);
   display: flex;
   justify-content: space-between;
+  z-index: 1;
 `;
 
-const FooterWrapper = styled.footer`
-  padding: 1.5rem;
-  display: flex;
+const FooterWrapper = styled(AboutFooterWrapper)`
+  border: none;
+  margin-top: -4rem;
+  background-color: #2c2e32;
+  box-shadow: 120px 120px 120px #2c2e32;
+  /* height: 1rem; */
 `;
 
 const LinksList = styled.ul`

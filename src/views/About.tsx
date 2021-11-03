@@ -2,7 +2,6 @@ import { FC } from "react";
 import styled from "@emotion/styled";
 import heroBg from "assets/hero-across-bg.png";
 import BulletImg from "assets/Across-logo-bullet.svg";
-import Footer from "components/Footer";
 
 const About: FC = () => {
   return (
@@ -64,7 +63,6 @@ const About: FC = () => {
           </BulletTextWrapper>
         </BulletWrapper>
       </BodyWrapper>
-      <Footer />
     </Wrapper>
   );
 };
