@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ethers } from "ethers";
 import {
   useBridgeFees,
@@ -34,6 +34,7 @@ const SendAction: React.FC = () => {
 
   const { block } = useBlocks(toChain);
 
+  const [isSendPending, setSendPending] = useState(false);
   const { addTransaction } = useTransactions();
   const { addDeposit } = useDeposits();
   const { approve } = useERC20(token);
@@ -97,11 +98,18 @@ const SendAction: React.FC = () => {
       return;
     }
     if (canSend) {
-      handleSend().catch((err) => console.error(err));
+      setSendPending(true);
+      handleSend()
+        .catch((err) => console.error(err))
+        .finally(() => setSendPending(false));
     }
   };
 
-  const buttonMsg = hasToApprove ? "Approve" : "Send";
+  const buttonMsg = () => {
+    if (isSendPending) return "Sending in Progress...";
+    if (hasToApprove) return "Approve";
+    return "Send";
+  };
 
   const amountMinusFees =
     fees && amount.gte(0)
@@ -115,6 +123,7 @@ const SendAction: React.FC = () => {
       : amount;
 
   const buttonDisabled =
+    isSendPending ||
     (!hasToApprove && !canSend) ||
     (hasToApprove && !canApprove) ||
     amountMinusFees.lte(0);
@@ -149,7 +158,7 @@ const SendAction: React.FC = () => {
         )}
 
         <PrimaryButton onClick={handleClick} disabled={buttonDisabled}>
-          {buttonMsg}
+          {buttonMsg()}
         </PrimaryButton>
       </Wrapper>
     </AccentSection>
