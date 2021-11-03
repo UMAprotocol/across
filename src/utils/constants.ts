@@ -483,7 +483,7 @@ export const POOL_LIST: Token[] = [
     symbol: "ETH",
     decimals: 18,
     logoURI: ethereumLogo,
-    bridgePool: "0x75a29a66452C80702952bbcEDd284C8c4CF5Ab17",
+    bridgePool: "0x7355Efc63Ae731f584380a9838292c7046c1e433",
   },
   {
     address: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
