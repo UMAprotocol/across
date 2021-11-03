@@ -35,6 +35,7 @@ const SendAction: React.FC = () => {
   const { block } = useBlocks(toChain);
 
   const [isSendPending, setSendPending] = useState(false);
+  const [isApprovalPending, setApprovalPending] = useState(false);
   const { addTransaction } = useTransactions();
   const { addDeposit } = useDeposits();
   const { approve } = useERC20(token);
@@ -94,19 +95,25 @@ const SendAction: React.FC = () => {
       return;
     }
     if (hasToApprove) {
-      handleApprove().catch((err) => console.error(err));
+      setApprovalPending(true);
+      handleApprove()
+        .catch((err) => console.error(err))
+        .finally(() => setApprovalPending(false));
       return;
     }
     if (canSend) {
       setSendPending(true);
       handleSend()
         .catch((err) => console.error(err))
+        // this actually happens after component unmounts, which is not good. it causes a react warning, but we need
+        // it here if user cancels the send. so keep this until theres a better way.
         .finally(() => setSendPending(false));
     }
   };
 
   const buttonMsg = () => {
-    if (isSendPending) return "Sending in Progress...";
+    if (isSendPending) return "Sending in progress...";
+    if (isApprovalPending) return "Approval in progress...";
     if (hasToApprove) return "Approve";
     return "Send";
   };
@@ -124,6 +131,7 @@ const SendAction: React.FC = () => {
 
   const buttonDisabled =
     isSendPending ||
+    isApprovalPending ||
     (!hasToApprove && !canSend) ||
     (hasToApprove && !canApprove) ||
     amountMinusFees.lte(0);
