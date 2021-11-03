@@ -147,4 +147,6 @@ const LinksIcon = styled.img`
   width: 20px;
 `;
 
-const PoweredImage = styled.img``;
+const PoweredImage = styled.img`
+  height: 20px;
+`;
