@@ -130,8 +130,6 @@ const AddLiquidityForm: FC<Props> = ({
 
           const { emitter } = notify.hash(transaction.hash);
           emitter.on("all", addEtherscan);
-          // Scope to closure.
-          const acc = account;
           emitter.on("txConfirmed", (tx: any) => {
             setTxSubmitted(false);
             setShowSuccess(true);
