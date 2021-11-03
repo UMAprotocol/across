@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import DiscordLogo from "assets/disc-logo.svg";
 import TwitterLogo from "assets/icon-twitter.svg";
 import heroBg from "assets/hero-across-bg.png";
-
+import BulletImg from "assets/Across-logo-bullet.svg";
 const About: FC = () => {
   return (
     <Wrapper>
@@ -13,38 +13,56 @@ const About: FC = () => {
         </HeroHeader>
       </Hero>
       <BodyWrapper>
-        <Header>Information</Header>
-        <Subheader>Subheader with SEO words</Subheader>
-        <BodyText>
-          Here is text lorem SEO phrases dolor sit text lorem ipsum dolor sit
-          sedam lorem doloripsum elor sit text lorem se dolor sit seda lorem
-          dolor{" "}
-        </BodyText>
-        <Link href="https://umaproject.org" target="_blank" rel="noreferrer">
-          Read more in Docs
-        </Link>
-        <Subheader>Subheader with SEO Words</Subheader>
-        <BodyText>
-          Here is text lorem SEO phrases dolor sit text lorem ipsum dolor sit
-          sedam lorem doloripsum elor sit text lorem se dolor sit seda lorem
-          dolor sit text lorem ipsum dolor sit sedam lorem doloripsum elor sit
-          text lorem se dolor sit seda lorem dolor sedam.
-          <br /> <br />
-          Ext lorem ipsum dolor sit sedam lorem doloripsum elor sit text lorem
-          se dolor sit seda lorem dolor sit text lorem ipsum dolor sit sedam
-          lorem doloripsum elor sit text lorem se dolor sit seda lorem dolor
-          sedam
-        </BodyText>
-        <Subheader>Team maybe</Subheader>
-        <BodyText>To give confidence and lorem ipsum. Link to UMA</BodyText>
-        <SocialLinksWrapper>
-          <SocialLink href="https://discord.gg/yyxGkUqW" rel="noreferrer">
-            <img src={DiscordLogo} alt="discord_img" />
-          </SocialLink>
-          <SocialLink href="https://twitter.com/umaprotocol" rel="noreferrer">
-            <img src={TwitterLogo} alt="twitter_img" />
-          </SocialLink>
-        </SocialLinksWrapper>
+        <BulletWrapper>
+          <BulletImage src={BulletImg} alt="across_logo" />
+          <BulletTextWrapper>
+            <BulletHeader>Fast Transfers</BulletHeader>
+            <BulletText>
+              Lorem ipsum SEO sit amet, consectetur adipiscing elit. Sed vitae
+              tristique erat. Maecenas suscipit commodo quam, vitae scelerisque
+              elit vestibulum id.
+              <br /> <br />
+              Mauris sed magna tempor, feugiat elit placerat, sagittis urna.
+              Suspendisse porttitor neque ex, et rutrum here is a link sed. Cras
+              sodales nunc ac nunc.
+            </BulletText>
+          </BulletTextWrapper>
+        </BulletWrapper>
+        <BulletWrapper>
+          <BulletImage src={BulletImg} alt="across_logo" />
+          <BulletTextWrapper>
+            <BulletHeader>Across different chains</BulletHeader>
+            <BulletText>
+              Cosectetur adipiscing SEO. Sed vitae tristique erat. Maecenas
+              suscipit commodo quam, vitae scelerisque elit vestibulum id.
+              <br /> <br />
+              Mauris sed magna tempor, feugiat elit placerat, sagittis urna.
+            </BulletText>
+          </BulletTextWrapper>
+        </BulletWrapper>
+        <BulletWrapper>
+          <BulletImage src={BulletImg} alt="across_logo" />
+          <BulletTextWrapper>
+            <BulletHeader>Secured by lorem ipsum</BulletHeader>
+            <BulletText>
+              Lorem SEO dolor sit amet, consectetur adipiscing elit. Sed vitae
+              tristique erat. Maecenas suscipit commodo quam, vitae scelerisque
+              elit vestibulum id.
+              <br /> <br />
+              Mauris sed magna tempor, feugiat elit placerat, sagittis urna.
+              Suspendisse porttitor neque ex, et rutrum elit cursus sed. Cras
+              sodales nunc ac nunc.
+              <br /> <br />
+              <Link
+                href="https://umaproject.org"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Here is a link
+              </Link>
+            </BulletText>
+          </BulletTextWrapper>
+        </BulletWrapper>
       </BodyWrapper>
     </Wrapper>
   );
@@ -62,9 +80,9 @@ const HeroHeader = styled.h1`
   font-weight: 700;
   font-family: "Barlow";
   line-height: 4.5rem;
-  width: 90%;
+  width: 80%;
   max-width: 800px;
-  margin-left: 5rem;
+  margin-left: 10vw;
   padding-top: 2.5rem;
 `;
 
@@ -72,31 +90,6 @@ const Wrapper = styled.div``;
 
 const BodyWrapper = styled.div`
   padding: 1.5rem;
-`;
-
-const Header = styled.h2`
-  font-size: 1.25rem;
-  font-weight: 700;
-  line-height: 1.5rem;
-  font-family: "Barlow";
-  margin-top: 2rem;
-`;
-
-const Subheader = styled.h3`
-  font-family: "Barlow";
-  font-weight: 700;
-  font-size: 0.875rem;
-  line-height: 1rem;
-  margin-top: 1.5rem;
-  margin-bottom: 1rem;
-`;
-
-const BodyText = styled.h4`
-  font-family: "Barlow";
-  font-weight: 400;
-  font-size: 0.875rem;
-  line-height: 1rem;
-  margin-bottom: 1rem;
 `;
 
 const Link = styled.a`
@@ -126,4 +119,37 @@ const SocialLink = styled.a`
     margin: 0 1rem;
   }
 `;
+
+const BulletWrapper = styled.div`
+  display: flex;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+`;
+
+const BulletImage = styled.img`
+  flex-basis: 20%;
+  height: 35px;
+  width: 35px;
+`;
+
+const BulletTextWrapper = styled.div`
+  flex-basis: 50%;
+`;
+
+const BulletText = styled.h4`
+  font-family: "Barlow";
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1rem;
+  margin-bottom: 1rem;
+`;
+
+const BulletHeader = styled.h2`
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.5rem;
+  font-family: "Barlow";
+  margin-bottom: 1rem;
+`;
+
 export default About;
