@@ -1,5 +1,5 @@
 import { FC, ChangeEvent, useState, useCallback, useEffect } from "react";
-import { onboard } from "utils";
+import { onboard, getGasPrice, formatEther, max } from "utils";
 import { useConnection } from "state/hooks";
 import {
   RoundBox,
@@ -13,7 +13,7 @@ import {
 import { poolClient } from "state/poolsApi";
 import { toWeiSafe } from "utils/weiMath";
 import { useERC20 } from "hooks";
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 import { clients } from "@uma/sdk";
 import { addEtherscan } from "utils/notify";
 import BouncingDotsLoader from "components/BouncingDotsLoader";
@@ -21,6 +21,12 @@ import BouncingDotsLoader from "components/BouncingDotsLoader";
 // max uint value is 2^256 - 1
 const MAX_UINT_VAL = ethers.constants.MaxUint256;
 const INFINITE_APPROVAL_AMOUNT = MAX_UINT_VAL;
+
+// TODO: could move these 3 into envs
+const DEFAULT_GAS_PRICE = toWeiSafe("150", 9);
+const GAS_PRICE_BUFFER = toWeiSafe("25", 9);
+// Rounded up from a mainnet transaction sending eth
+const ADD_LIQUIDITY_ETH_GAS = BigNumber.from(80000);
 
 interface Props {
   error: Error | undefined;
@@ -36,6 +42,14 @@ interface Props {
   setAmount: React.Dispatch<React.SetStateAction<string>>;
 }
 
+// for a dynamic gas estimation
+function estimateGas(
+  gas: BigNumber,
+  gasPriceWei: BigNumber,
+  buffer: BigNumber = GAS_PRICE_BUFFER
+) {
+  return gas.mul(gasPriceWei.add(buffer));
+}
 const AddLiquidityForm: FC<Props> = ({
   error,
   amount,
@@ -55,6 +69,7 @@ const AddLiquidityForm: FC<Props> = ({
 
   const [userNeedsToApprove, setUserNeedsToApprove] = useState(false);
   const [txSubmitted, setTxSubmitted] = useState(false);
+  const [gasPrice, setGasPrice] = useState<BigNumber>(DEFAULT_GAS_PRICE);
 
   const checkIfUserHasToApprove = useCallback(async () => {
     if (signer && account) {
@@ -75,6 +90,12 @@ const AddLiquidityForm: FC<Props> = ({
   useEffect(() => {
     if (isConnected && symbol !== "ETH") checkIfUserHasToApprove();
   }, [isConnected, symbol, checkIfUserHasToApprove]);
+
+  // TODO: move this to redux and update on an interval, every X blocks or something
+  useEffect(() => {
+    if (!provider || !isConnected) return;
+    getGasPrice(provider).then(setGasPrice);
+  }, [provider, isConnected]);
 
   const handleApprove = async () => {
     const tx = await approve({
@@ -169,9 +190,13 @@ const AddLiquidityForm: FC<Props> = ({
           <MaxButton
             onClick={() => {
               if (symbol === "ETH") {
-                const removeApproxMaxGas = toWeiSafe("0.1");
                 setAmount(
-                  ethers.utils.formatEther(balance.sub(removeApproxMaxGas))
+                  formatEther(
+                    max(
+                      "0",
+                      balance.sub(estimateGas(ADD_LIQUIDITY_ETH_GAS, gasPrice))
+                    )
+                  )
                 );
               } else {
                 setAmount(ethers.utils.formatUnits(balance, decimals));
