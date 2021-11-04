@@ -1,6 +1,6 @@
 import { FC, ChangeEvent, useState, useCallback, useEffect } from "react";
 import { onboard, getGasPrice, formatEther, max, estimateGas } from "utils";
-import { useConnection } from "state/hooks";
+import { useConnection, useAppSelector } from "state/hooks";
 import {
   RoundBox,
   MaxButton,
@@ -17,6 +17,7 @@ import { ethers, BigNumber } from "ethers";
 import { clients } from "@uma/sdk";
 import { addEtherscan } from "utils/notify";
 import BouncingDotsLoader from "components/BouncingDotsLoader";
+import get from "lodash/get";
 
 // max uint value is 2^256 - 1
 const MAX_UINT_VAL = ethers.constants.MaxUint256;
@@ -62,6 +63,10 @@ const AddLiquidityForm: FC<Props> = ({
   const [userNeedsToApprove, setUserNeedsToApprove] = useState(false);
   const [txSubmitted, setTxSubmitted] = useState(false);
   const [gasPrice, setGasPrice] = useState<BigNumber>(DEFAULT_GAS_PRICE);
+  const [activeTxId, setActiveTxId] = useState<string | undefined>();
+  const activeTx = useAppSelector((state) =>
+    activeTxId ? get(state, ["pools", "transactions", activeTxId]) : undefined
+  );
 
   const checkIfUserHasToApprove = useCallback(async () => {
     if (signer && account) {
@@ -88,6 +93,13 @@ const AddLiquidityForm: FC<Props> = ({
     if (!provider || !isConnected) return;
     getGasPrice(provider).then(setGasPrice);
   }, [provider, isConnected]);
+
+  useEffect(() => {
+    if (!activeTx) return;
+    if (activeTx.state !== "mined") return;
+    setActiveTxId(undefined);
+    setShowSuccess(true);
+  }, [setShowSuccess, activeTx]);
 
   const handleApprove = async () => {
     const tx = await approve({
@@ -138,17 +150,16 @@ const AddLiquidityForm: FC<Props> = ({
           );
         }
 
+        setActiveTxId(txId);
         const transaction = poolClient.getTx(txId);
 
         if (transaction.hash) {
           setTxSubmitted(true);
-
           const { emitter } = notify.hash(transaction.hash);
           emitter.on("all", addEtherscan);
           emitter.on("txConfirmed", (tx: any) => {
             if (transaction.hash) notify.unsubscribe(transaction.hash);
             setTxSubmitted(false);
-            setShowSuccess(true);
             const url = `https://etherscan.io/tx/${transaction.hash}`;
             setDepositUrl(url);
           });

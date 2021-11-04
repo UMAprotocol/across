@@ -1,7 +1,7 @@
-import { FC, Dispatch, SetStateAction } from "react";
+import { FC, Dispatch, SetStateAction, useState, useEffect } from "react";
 import PoolFormSlider from "./PoolFormSlider";
 import { onboard } from "utils";
-import { useConnection } from "state/hooks";
+import { useConnection, useAppSelector } from "state/hooks";
 import {
   RemoveAmount,
   RemovePercentButtonsWrapper,
@@ -14,6 +14,7 @@ import { ethers } from "ethers";
 import { toWeiSafe } from "utils/weiMath";
 import { poolClient } from "state/poolsApi";
 import { addEtherscan } from "utils/notify";
+import get from "lodash/get";
 
 const toBN = ethers.BigNumber.from;
 
@@ -41,6 +42,17 @@ const RemoveLiqudityForm: FC<Props> = ({
 }) => {
   const { init } = onboard;
   const { isConnected, provider, signer, notify } = useConnection();
+  const [activeTxId, setActiveTxId] = useState<string | undefined>();
+  const activeTx = useAppSelector((state) =>
+    activeTxId ? get(state, ["pools", "transactions", activeTxId]) : undefined
+  );
+
+  useEffect(() => {
+    if (!activeTx) return;
+    if (activeTx.state !== "mined") return;
+    setActiveTxId(undefined);
+    setShowSuccess(true);
+  }, [setShowSuccess, activeTx]);
 
   const handleButtonClick = async () => {
     if (!provider) {
@@ -71,7 +83,7 @@ const RemoveLiqudityForm: FC<Props> = ({
             weiAmount
           );
         }
-
+        setActiveTxId(txId);
         const transaction = poolClient.getTx(txId);
 
         if (transaction.hash) {
@@ -80,7 +92,6 @@ const RemoveLiqudityForm: FC<Props> = ({
 
           emitter.on("txConfirmed", (tx) => {
             if (transaction.hash) notify.unsubscribe(transaction.hash);
-            setShowSuccess(true);
             const url = `https://etherscan.io/tx/${transaction.hash}`;
             setDepositUrl(url);
           });
