@@ -20,6 +20,7 @@ import { toWeiSafe } from "utils/weiMath";
 import { poolClient } from "state/poolsApi";
 import { addEtherscan } from "utils/notify";
 import * as umaSdk from "@uma/sdk";
+import { formatUnits } from "utils";
 
 const { previewRemoval } = umaSdk.across.clients.bridgePool;
 
@@ -35,6 +36,8 @@ interface Props {
   setShowSuccess: React.Dispatch<React.SetStateAction<boolean>>;
   setDepositUrl: React.Dispatch<React.SetStateAction<string>>;
   balance: ethers.BigNumber;
+  position: ethers.BigNumber;
+  feesEarned: ethers.BigNumber;
 }
 const RemoveLiqudityForm: FC<Props> = ({
   removeAmount,
@@ -46,6 +49,8 @@ const RemoveLiqudityForm: FC<Props> = ({
   setShowSuccess,
   setDepositUrl,
   balance,
+  position,
+  feesEarned,
 }) => {
   const { init } = onboard;
   const { isConnected, provider, signer, notify } = useConnection();
@@ -99,6 +104,14 @@ const RemoveLiqudityForm: FC<Props> = ({
     }
   };
 
+  const preview = isConnected
+    ? previewRemoval(
+        position.toString(),
+        feesEarned.toString(),
+        removeAmount / 100
+      )
+    : null;
+
   return (
     <>
       <RemoveAmount>
@@ -125,13 +138,19 @@ const RemoveLiqudityForm: FC<Props> = ({
           <FeesBlockWrapper>
             <FeesBlock>
               <FeesBoldInfo>
-                Remove amount<FeesPercent>(72%)</FeesPercent>
+                Remove amount<FeesPercent>({removeAmount}%)</FeesPercent>
               </FeesBoldInfo>
               <FeesInfo>Left in pool</FeesInfo>
             </FeesBlock>
             <FeesBlock>
-              <FeesValues>1.116 ETH</FeesValues>
-              <FeesValues>0.434 ETH</FeesValues>
+              <FeesValues>
+                {preview && formatUnits(preview.position.recieve, decimals)}{" "}
+                {symbol}
+              </FeesValues>
+              <FeesValues>
+                {preview && formatUnits(preview.position.remain, decimals)}
+                {symbol}
+              </FeesValues>
             </FeesBlock>
           </FeesBlockWrapper>
           <FeesBlockWrapper>
@@ -140,8 +159,13 @@ const RemoveLiqudityForm: FC<Props> = ({
               <FeesInfo>Left in pool</FeesInfo>
             </FeesBlock>
             <FeesBlock>
-              <FeesValues>0.077 ETH</FeesValues>
-              <FeesValues>0.012345 ETH</FeesValues>
+              <FeesValues>
+                {preview && formatUnits(preview.fees.recieve, decimals)}{" "}
+                {symbol}
+              </FeesValues>
+              <FeesValues>
+                {preview && formatUnits(preview.fees.remain, decimals)} {symbol}
+              </FeesValues>
             </FeesBlock>
           </FeesBlockWrapper>
           <FeesBlockWrapper>
@@ -149,7 +173,10 @@ const RemoveLiqudityForm: FC<Props> = ({
               <FeesBoldInfo>You will get</FeesBoldInfo>
             </FeesBlock>
             <FeesBlock>
-              <FeesValues>1.119 ETH</FeesValues>
+              <FeesValues>
+                {preview && formatUnits(preview.total.recieve, decimals)}
+                {symbol}
+              </FeesValues>
             </FeesBlock>
           </FeesBlockWrapper>
         </>
