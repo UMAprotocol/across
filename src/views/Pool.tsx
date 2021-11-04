@@ -15,7 +15,7 @@ import BouncingDotsLoader from "components/BouncingDotsLoader";
 import { BounceType } from "components/BouncingDotsLoader/BouncingDotsLoader";
 
 const Pool: FC = () => {
-  const [token, setToken] = useState<Token>(POOL_LIST[0]);
+  const [token, setToken] = useState<Token>(POOL_LIST[2]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [depositUrl, setDepositUrl] = useState("");
   const [loadingPoolState, setLoadingPoolState] = useState(false);

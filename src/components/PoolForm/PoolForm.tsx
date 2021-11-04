@@ -50,8 +50,6 @@ const PoolForm: FC<Props> = ({
   bridgeAddress,
   lpTokens,
   tokenAddress,
-  ethBalance,
-  erc20Balances,
   setShowSuccess,
   setDepositUrl,
   balance,

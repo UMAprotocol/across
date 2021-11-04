@@ -23,7 +23,7 @@ interface Props {
 }
 
 const PoolSelection: FC<Props> = ({ token, setToken }) => {
-  const { account, isConnected } = useConnection();
+  const { account } = useConnection();
 
   const { data: balances } = useBalances(
     {
@@ -56,11 +56,7 @@ const PoolSelection: FC<Props> = ({ token, setToken }) => {
         <SectionTitle>Select pool</SectionTitle>
         <InputGroup>
           <RoundBox as="label" {...getLabelProps()}>
-            <ToggleButton
-              type="button"
-              {...getToggleButtonProps()}
-              disabled={!isConnected}
-            >
+            <ToggleButton type="button" {...getToggleButtonProps()}>
               <Logo src={selectedItem?.logoURI} alt={selectedItem?.name} />
               <div>{selectedItem?.symbol}</div>
               <ToggleIcon />
@@ -68,18 +64,17 @@ const PoolSelection: FC<Props> = ({ token, setToken }) => {
           </RoundBox>
           <Menu {...getMenuProps()}>
             {isOpen &&
-              POOL_LIST.map((token, index) => (
-                <Item
-                  {...getItemProps({ item: token, index })}
-                  key={token.address}
-                >
-                  <Logo src={token.logoURI} alt={token.name} />
-                  <div>{token.name}</div>
-                  <div>
-                    {balances && formatUnits(balances[index], token.decimals)}
-                  </div>
-                </Item>
-              ))}
+              POOL_LIST.map((t, index) => {
+                return (
+                  <Item {...getItemProps({ item: t, index })} key={t.address}>
+                    <Logo src={t.logoURI} alt={t.name} />
+                    <div>{t.name}</div>
+                    <div>
+                      {balances && formatUnits(balances[index], t.decimals)}
+                    </div>
+                  </Item>
+                );
+              })}
           </Menu>
         </InputGroup>
       </Wrapper>
