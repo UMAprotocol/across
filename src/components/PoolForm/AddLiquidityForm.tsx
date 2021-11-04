@@ -1,5 +1,5 @@
 import { FC, ChangeEvent, useState, useCallback, useEffect } from "react";
-import { onboard, getGasPrice, formatEther, max } from "utils";
+import { onboard, getGasPrice, formatEther, max, estimateGas } from "utils";
 import { useConnection } from "state/hooks";
 import {
   RoundBox,
@@ -42,14 +42,6 @@ interface Props {
   setAmount: React.Dispatch<React.SetStateAction<string>>;
 }
 
-// for a dynamic gas estimation
-function estimateGas(
-  gas: BigNumber,
-  gasPriceWei: BigNumber,
-  buffer: BigNumber = GAS_PRICE_BUFFER
-) {
-  return gas.mul(gasPriceWei.add(buffer));
-}
 const AddLiquidityForm: FC<Props> = ({
   error,
   amount,
@@ -194,7 +186,13 @@ const AddLiquidityForm: FC<Props> = ({
                   formatEther(
                     max(
                       "0",
-                      balance.sub(estimateGas(ADD_LIQUIDITY_ETH_GAS, gasPrice))
+                      balance.sub(
+                        estimateGas(
+                          ADD_LIQUIDITY_ETH_GAS,
+                          gasPrice,
+                          GAS_PRICE_BUFFER
+                        )
+                      )
                     )
                   )
                 );
