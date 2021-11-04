@@ -8,12 +8,20 @@ import {
   RemovePercentButton,
   RemoveFormButton,
   RemoveFormButtonWrapper,
-  Balance,
+  FeesBlockWrapper,
+  FeesBlock,
+  FeesValues,
+  FeesBoldInfo,
+  FeesInfo,
+  FeesPercent,
 } from "./RemoveLiquidityForm.styles";
 import { ethers } from "ethers";
 import { toWeiSafe } from "utils/weiMath";
 import { poolClient } from "state/poolsApi";
 import { addEtherscan } from "utils/notify";
+import * as umaSdk from "@uma/sdk";
+
+const { previewRemoval } = umaSdk.across.clients.bridgePool;
 
 const toBN = ethers.BigNumber.from;
 
@@ -111,11 +119,41 @@ const RemoveLiqudityForm: FC<Props> = ({
           Max
         </RemovePercentButton>
       </RemovePercentButtonsWrapper>
-      <Balance>
-        <span>
-          Balance: {ethers.utils.formatUnits(balance, decimals)} {symbol}
-        </span>
-      </Balance>
+
+      {isConnected && (
+        <>
+          <FeesBlockWrapper>
+            <FeesBlock>
+              <FeesBoldInfo>
+                Remove amount<FeesPercent>(72%)</FeesPercent>
+              </FeesBoldInfo>
+              <FeesInfo>Left in pool</FeesInfo>
+            </FeesBlock>
+            <FeesBlock>
+              <FeesValues>1.116 ETH</FeesValues>
+              <FeesValues>0.434 ETH</FeesValues>
+            </FeesBlock>
+          </FeesBlockWrapper>
+          <FeesBlockWrapper>
+            <FeesBlock>
+              <FeesBoldInfo>Fees earned</FeesBoldInfo>
+              <FeesInfo>Left in pool</FeesInfo>
+            </FeesBlock>
+            <FeesBlock>
+              <FeesValues>0.077 ETH</FeesValues>
+              <FeesValues>0.012345 ETH</FeesValues>
+            </FeesBlock>
+          </FeesBlockWrapper>
+          <FeesBlockWrapper>
+            <FeesBlock>
+              <FeesBoldInfo>You will get</FeesBoldInfo>
+            </FeesBlock>
+            <FeesBlock>
+              <FeesValues>1.119 ETH</FeesValues>
+            </FeesBlock>
+          </FeesBlockWrapper>
+        </>
+      )}
       <RemoveFormButtonWrapper>
         <RemoveFormButton onClick={handleButtonClick}>
           {!isConnected ? "Connect wallet" : "Remove liquidity"}
