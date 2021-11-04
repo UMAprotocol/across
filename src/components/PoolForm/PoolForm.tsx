@@ -18,6 +18,7 @@ import {
   PositionBlockItem,
   PositionBlockItemBold,
 } from "./PoolForm.styles";
+import { formatUnits } from "utils";
 
 interface Props {
   symbol: string;
@@ -86,8 +87,7 @@ const PoolForm: FC<Props> = ({
         <ROIWrapper>
           <ROIItem>Total Pool Size:</ROIItem>
           <ROIItem>
-            {ethers.utils.formatUnits(totalPoolSize, decimals)}
-            {symbol}
+            {formatUnits(totalPoolSize, decimals)} {symbol}
           </ROIItem>
         </ROIWrapper>
         <ROIWrapper>
