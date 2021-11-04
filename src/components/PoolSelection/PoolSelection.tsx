@@ -3,7 +3,7 @@ import { FC, Dispatch, SetStateAction } from "react";
 import { useSelect } from "downshift";
 
 import { useBalances, useConnection } from "state/hooks";
-import { formatUnits, POOL_LIST, ChainId, Token } from "utils";
+import { formatUnits, TOKENS_LIST, ChainId, Token } from "utils";
 import { Section, SectionTitle } from "../Section";
 
 import {
@@ -41,7 +41,7 @@ const PoolSelection: FC<Props> = ({ token, setToken }) => {
     getItemProps,
     getMenuProps,
   } = useSelect({
-    items: POOL_LIST,
+    items: TOKENS_LIST[ChainId.MAINNET],
     defaultSelectedItem: token,
     onSelectedItemChange: ({ selectedItem }) => {
       if (selectedItem) {
@@ -64,7 +64,7 @@ const PoolSelection: FC<Props> = ({ token, setToken }) => {
           </RoundBox>
           <Menu {...getMenuProps()}>
             {isOpen &&
-              POOL_LIST.map((t, index) => {
+              TOKENS_LIST[ChainId.MAINNET].map((t, index) => {
                 return (
                   <Item {...getItemProps({ item: t, index })} key={t.address}>
                     <Logo src={t.logoURI} alt={t.name} />
