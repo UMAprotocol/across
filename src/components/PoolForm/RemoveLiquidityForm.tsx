@@ -79,9 +79,13 @@ const RemoveLiqudityForm: FC<Props> = ({
           emitter.on("all", addEtherscan);
 
           emitter.on("txConfirmed", (tx) => {
+            if (transaction.hash) notify.unsubscribe(transaction.hash);
             setShowSuccess(true);
             const url = `https://etherscan.io/tx/${transaction.hash}`;
             setDepositUrl(url);
+          });
+          emitter.on("txFailed", () => {
+            if (transaction.hash) notify.unsubscribe(transaction.hash);
           });
         }
         return transaction;

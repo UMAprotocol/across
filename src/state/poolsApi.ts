@@ -17,6 +17,7 @@ export function poolEventHandler(path: string[], data: any) {
 export const poolClient = new Client(
   {
     multicall2Address: multicallTwoAddress,
+    // setting this lower than 1 will cause u to miss some state changes when tx mines
     confirmations: 1,
   },
   {
@@ -25,5 +26,5 @@ export const poolClient = new Client(
   poolEventHandler
 );
 
-// Checks every 30 seconds for new Pool data on new transactions
-poolClient.startInterval(20000);
+// Checks every 10 seconds for new Pool data on new transactions
+poolClient.startInterval(10000);
