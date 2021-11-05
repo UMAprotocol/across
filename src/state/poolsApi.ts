@@ -17,9 +17,7 @@ export function poolEventHandler(path: string[], data: any) {
 export const poolClient = new Client(
   {
     multicall2Address: multicallTwoAddress,
-    // setting this lower than 2 will cause u to miss some state changes when tx mines.
-    // its more important we show the right state than state updating immediately after tx mines.
-    confirmations: 2,
+    confirmations: 1,
   },
   {
     provider,
