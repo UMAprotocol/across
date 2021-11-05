@@ -89,7 +89,9 @@ const AddLiquidityForm: FC<Props> = ({
   // TODO: move this to redux and update on an interval, every X blocks or something
   useEffect(() => {
     if (!provider || !isConnected) return;
-    getGasPrice(provider).then(setGasPrice);
+    getGasPrice(provider).then(setGasPrice).catch(err=>{
+      console.error('Error getting gas price',err)
+    })
   }, [provider, isConnected]);
 
   const handleApprove = async () => {
